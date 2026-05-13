@@ -24,7 +24,7 @@ public class ObservabilityGeneratorTests
         string observabilityPath = Path.Combine(
             root,
             "src",
-            $"{projectName}.Web",
+            $"{projectName}.Api",
             "Observability");
 
         Assert.True(Directory.Exists(observabilityPath));

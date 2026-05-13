@@ -37,11 +37,15 @@ public static class TemplateValidationHelper
     {
         if (!IsToolAvailable("docker")) return;
 
-        string dir = CreateTempDir();
-        string path = Path.Combine(dir, "docker-compose.yml");
+        // Create a docker/ subdir with an empty parent .env so env_file: ../.env resolves
+        string root = CreateTempDir();
+        string dockerDir = Path.Combine(root, "docker");
+        Directory.CreateDirectory(dockerDir);
+        File.WriteAllText(Path.Combine(root, ".env"), string.Empty);
+        string path = Path.Combine(dockerDir, "docker-compose.yml");
         File.WriteAllText(path, content);
 
-        Run("docker", $"compose -f {path} config", dir);
+        Run("docker", $"compose -f {path} config", dockerDir);
     }
 
     public static void ValidateJson(string content)

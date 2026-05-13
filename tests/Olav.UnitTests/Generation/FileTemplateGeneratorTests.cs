@@ -34,17 +34,14 @@ public class FileTemplateGeneratorTests
         AssertFileExists(root, ".github/workflows/ci.yml");
 
         AssertFileExists(root, "docker/Dockerfile");
-        AssertFileExists(root, "docker/docker-compose.yml");
-        AssertFileExists(root, "docker/docker-compose.staging.yml");
-        AssertFileExists(root, "docker/docker-compose.dev.yml");
         AssertFileExists(root, "docker/docker-compose.local.yml");
 
-        AssertFileExists(root, "src/TestApp.Web/Program.cs");
+        AssertFileExists(root, "src/TestApp.Api/Program.cs");
 
         AssertFileNotEmpty(root, "global.json");
         AssertFileNotEmpty(root, ".github/workflows/ci.yml");
         AssertFileNotEmpty(root, "Directory.Build.props");
-        AssertFileNotEmpty(root, "docker/docker-compose.yml");
+        AssertFileNotEmpty(root, "docker/docker-compose.local.yml");
     }
 
     private static void AssertFileExists(string root, string relativePath)
