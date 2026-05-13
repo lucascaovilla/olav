@@ -21,17 +21,14 @@ public static class DockerfileTemplate
         WORKDIR /src
 
         COPY . .
-        RUN dotnet restore
-        RUN dotnet publish -c Release -o /app/publish
+        RUN dotnet restore src/{name}.Api/{name}.Api.csproj
+        RUN dotnet publish src/{name}.Api/{name}.Api.csproj -c Release -o /app/publish
 
         FROM mcr.microsoft.com/dotnet/aspnet:10.0
         WORKDIR /app
-
         COPY --from=build /app/publish .
-
         ENV ASPNETCORE_URLS=http://+:8080
         EXPOSE 8080
-
         ENTRYPOINT ["dotnet", "{name}.Api.dll"]
         """;
     }

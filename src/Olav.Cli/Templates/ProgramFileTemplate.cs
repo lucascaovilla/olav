@@ -19,12 +19,12 @@ public static class ProgramFileTemplate
     public static string Generate(string name, string owner, string license)
     {
         return FileHeaderTemplate.Generate("Program.cs", owner, license) + $$"""
-        namespace {{name}}.Web;
+        namespace {{name}}.Api;
 
         using Microsoft.AspNetCore.Builder;
         using Microsoft.Extensions.DependencyInjection;
         using Microsoft.Extensions.Hosting;
-        using {{name}}.Web.Observability;
+        using {{name}}.Api.Observability;
 
         /// <summary>
         /// Entry point.

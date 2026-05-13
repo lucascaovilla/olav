@@ -65,11 +65,11 @@ public class TestGenerator
             $"add tests/{this.name}.ArchitectureTests/{this.name}.ArchitectureTests.csproj reference src/{this.name}.Infrastructure/{this.name}.Infrastructure.csproj",
             this.root);
         DotnetRunner.Run(
-            $"add tests/{this.name}.ArchitectureTests/{this.name}.ArchitectureTests.csproj reference src/{this.name}.Web/{this.name}.Web.csproj",
+            $"add tests/{this.name}.ArchitectureTests/{this.name}.ArchitectureTests.csproj reference src/{this.name}.Api/{this.name}.Api.csproj",
             this.root);
 
         DotnetRunner.Run(
-            $"add tests/{this.name}.IntegrationTests/{this.name}.IntegrationTests.csproj reference src/{this.name}.Web/{this.name}.Web.csproj",
+            $"add tests/{this.name}.IntegrationTests/{this.name}.IntegrationTests.csproj reference src/{this.name}.Api/{this.name}.Api.csproj",
             this.root);
     }
 

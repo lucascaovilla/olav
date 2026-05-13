@@ -109,25 +109,13 @@ public class FileTemplateGenerator
             DockerignoreTemplate.Generate());
 
         FileSystem.WriteFile(
-            Path.Combine(this.root, "docker/docker-compose.yml"),
-            DockerComposeTemplate.GeneratePrd(this.name));
-
-        FileSystem.WriteFile(
-            Path.Combine(this.root, "docker/docker-compose.staging.yml"),
-            DockerComposeTemplate.GenerateStaging(this.name));
-
-        FileSystem.WriteFile(
-            Path.Combine(this.root, "docker/docker-compose.dev.yml"),
-            DockerComposeTemplate.GenerateDev(this.name));
-
-        FileSystem.WriteFile(
             Path.Combine(this.root, "docker/docker-compose.local.yml"),
             DockerComposeTemplate.GenerateLocal(this.name));
     }
 
     private void GenerateWebFiles()
     {
-        string webPath = Path.Combine(this.root, "src", $"{this.name}.Web");
+        string webPath = Path.Combine(this.root, "src", $"{this.name}.Api");
 
         FileSystem.WriteFile(
             Path.Combine(webPath, "Program.cs"),
@@ -171,10 +159,10 @@ public class FileTemplateGenerator
             Path.Combine(src, $"{this.name}.Infrastructure/Class1.cs"));
 
         FileSystem.DeleteIfExists(
-            Path.Combine(src, $"{this.name}.Web/Controllers/WeatherForecastController.cs"));
+            Path.Combine(src, $"{this.name}.Api/Controllers/WeatherForecastController.cs"));
 
         FileSystem.DeleteIfExists(
-            Path.Combine(src, $"{this.name}.Web/WeatherForecast.cs"));
+            Path.Combine(src, $"{this.name}.Api/WeatherForecast.cs"));
 
         FileSystem.DeleteIfExists(
             Path.Combine(tests, $"{this.name}.ArchitectureTests/UnitTest1.cs"));

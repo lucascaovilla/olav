@@ -19,7 +19,7 @@ public static class CorrelationMiddlewareTemplate
     public static string Generate(string name, string owner, string license)
     {
         return FileHeaderTemplate.Generate("CorrelationMiddleware.cs", owner, license) + $$"""
-        namespace {{name}}.Web.Observability;
+        namespace {{name}}.Api.Observability;
 
         using System;
         using System.Diagnostics;

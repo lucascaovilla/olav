@@ -49,7 +49,7 @@ public class SolutionGenerator
         DotnetRunner.Run($"sln add src/{this.name}.Domain/{this.name}.Domain.csproj", this.root);
         DotnetRunner.Run($"sln add src/{this.name}.Application/{this.name}.Application.csproj", this.root);
         DotnetRunner.Run($"sln add src/{this.name}.Infrastructure/{this.name}.Infrastructure.csproj", this.root);
-        DotnetRunner.Run($"sln add src/{this.name}.Web/{this.name}.Web.csproj", this.root);
+        DotnetRunner.Run($"sln add src/{this.name}.Api/{this.name}.Api.csproj", this.root);
 
         DotnetRunner.Run($"sln add tests/{this.name}.ArchitectureTests/{this.name}.ArchitectureTests.csproj", this.root);
         DotnetRunner.Run($"sln add tests/{this.name}.IntegrationTests/{this.name}.IntegrationTests.csproj", this.root);

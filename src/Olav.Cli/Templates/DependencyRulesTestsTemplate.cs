@@ -51,7 +51,7 @@ public static class DependencyRulesTestsTemplate
                     .And()
                     .NotHaveDependencyOn("{{name}}.Infrastructure")
                     .And()
-                    .NotHaveDependencyOn("{{name}}.Web")
+                    .NotHaveDependencyOn("{{name}}.Api")
                     .GetResult()
                     .IsSuccessful;
 
@@ -59,14 +59,14 @@ public static class DependencyRulesTestsTemplate
             }
 
             /// <summary>
-            /// Application must not depend on Web.
+            /// Application must not depend on Api.
             /// </summary>
             [Fact]
-            public void Application_Should_Not_Depend_On_Web()
+            public void Application_Should_Not_Depend_On_Api()
             {
                 bool result = Types.InAssembly(ApplicationAssembly)
                     .Should()
-                    .NotHaveDependencyOn("{{name}}.Web")
+                    .NotHaveDependencyOn("{{name}}.Api")
                     .GetResult()
                     .IsSuccessful;
 
@@ -74,14 +74,14 @@ public static class DependencyRulesTestsTemplate
             }
 
             /// <summary>
-            /// Infrastructure must not depend on Web.
+            /// Infrastructure must not depend on Api.
             /// </summary>
             [Fact]
-            public void Infrastructure_Should_Not_Depend_On_Web()
+            public void Infrastructure_Should_Not_Depend_On_Api()
             {
                 bool result = Types.InAssembly(InfrastructureAssembly)
                     .Should()
-                    .NotHaveDependencyOn("{{name}}.Web")
+                    .NotHaveDependencyOn("{{name}}.Api")
                     .GetResult()
                     .IsSuccessful;
 

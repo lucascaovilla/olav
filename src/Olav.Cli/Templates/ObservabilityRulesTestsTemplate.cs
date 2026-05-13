@@ -38,12 +38,12 @@ public static class ObservabilityRulesTestsTemplate
             [Fact]
             public void Observability_Namespace_Must_Exist()
             {
-                Assembly webAssembly = Assembly.Load("{{name}}.Web");
+                Assembly webAssembly = Assembly.Load("{{name}}.Api");
 
                 bool exists = webAssembly
                     .GetTypes()
                     .Any(t => t.Namespace != null &&
-                            t.Namespace.Contains(".Web.Observability"));
+                            t.Namespace.Contains(".Api.Observability"));
 
                 Assert.True(exists);
             }
@@ -71,7 +71,7 @@ public static class ObservabilityRulesTestsTemplate
                 string programPath = Path.Combine(
                     directory.FullName,
                     "src",
-                    "{{name}}.Web",
+                    "{{name}}.Api",
                     "Program.cs");
 
                 Assert.True(File.Exists(programPath));

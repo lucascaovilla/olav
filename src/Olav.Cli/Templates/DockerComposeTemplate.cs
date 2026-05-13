@@ -16,17 +16,15 @@ public static class DockerComposeTemplate
     /// <returns>Content of production docker compose.</returns>
     public static string GeneratePrd(string name)
     {
-        return $"""
+        return $$"""
         services:
-            api:
-                image: {name.ToLowerInvariant()}-api:latest
-                build:
-                    context: ..
-                    dockerfile: docker/Dockerfile
-                ports:
-                    - "8080:8080"
-                environment:
-                    - ASPNETCORE_ENVIRONMENT=Production
+          web:
+            image: {{name.ToLowerInvariant()}}-web:${IMAGE_TAG}
+            ports:
+              - "8080:8080"
+            env_file: ../.env
+            environment:
+              - ASPNETCORE_ENVIRONMENT=Production
         """;
     }
 
@@ -37,74 +35,39 @@ public static class DockerComposeTemplate
     /// <returns>Content of staging docker compose.</returns>
     public static string GenerateStaging(string name)
     {
-        return $"""
+        return $$"""
         services:
-            api:
-                image: {name.ToLowerInvariant()}-api:staging
-                build:
-                    context: ..
-                    dockerfile: docker/Dockerfile
-                ports:
-                    - "8081:8080"
-                environment:
-                    - ASPNETCORE_ENVIRONMENT=Staging
-        """;
-    }
-
-    /// <summary>
-    /// Returns content of generated development docker compose.
-    /// </summary>
-    /// <param name="name">Repository name.</param>
-    /// <returns>Content of development docker compose.</returns>
-    public static string GenerateDev(string name)
-    {
-        return $"""
-        services:
-            api:
-                build:
-                    context: ..
-                    dockerfile: docker/Dockerfile
-                volumes:
-                    - ..:/src
-                working_dir: /src
-                command: dotnet watch run --project src/{name.ToLowerInvariant()}.Api
-                ports:
-                    - "8082:8080"
-                environment:
-                    - ASPNETCORE_ENVIRONMENT=Development
+          web:
+            image: {{name.ToLowerInvariant()}}-web:${IMAGE_TAG}
+            ports:
+              - "8081:8080"
+            env_file: ../.env
+            environment:
+              - ASPNETCORE_ENVIRONMENT=Staging
         """;
     }
 
     /// <summary>
     /// Returns content of generated local docker compose.
+    /// Contains only the web service — infrastructure services are added by plugins.
     /// </summary>
     /// <param name="name">Repository name.</param>
     /// <returns>Content of local docker compose.</returns>
     public static string GenerateLocal(string name)
     {
-        return $"""
+        _ = name;
+        return """
         services:
-            api:
-                build:
-                    context: ..
-                    dockerfile: docker/Dockerfile
-                ports:
-                    - "8080:8080"
-                environment:
-                    - ASPNETCORE_ENVIRONMENT=Development
-                    - ConnectionStrings__Default=Host=postgres;Port=5432;Database={name.ToLowerInvariant()};Username=postgres;Password=postgres
-                depends_on:
-                    - postgres
-
-            postgres:
-                image: postgres:16
-                restart: always
-                environment:
-                    POSTGRES_DB: {name.ToLowerInvariant()}
-                    POSTGRES_USER: postgres
-                    POSTGRES_PASSWORD: postgres
-                ports:
-                    - "5432:5432"
+          web:
+            build:
+              context: ..
+              dockerfile: docker/Dockerfile
+            ports:
+              - "8080:8080"
+            env_file: ../.env
+            environment:
+              - ASPNETCORE_ENVIRONMENT=Development
+              - ASPNETCORE_URLS=http://+:8080
         """;
     }
 }

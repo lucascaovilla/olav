@@ -39,7 +39,7 @@ public class ObservabilityGenerator
     /// </summary>
     public void Generate()
     {
-        string web = Path.Combine(this.root, "src", $"{this.name}.Web");
+        string web = Path.Combine(this.root, "src", $"{this.name}.Api");
         string observability = Path.Combine(web, "Observability");
 
         FileSystem.CreateDirectory(observability);
