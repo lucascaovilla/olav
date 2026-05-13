@@ -24,26 +24,13 @@ jobs:
       - name: Resolve slot
         run: |
           REF="${GITHUB_REF}"
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
           if [[ "$REF" =~ ^refs/tags/v([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
             # Stable release tag pushed directly
             echo "SLOT=releases/v${BASH_REMATCH[1]}" >> $GITHUB_ENV
             echo "CURRENT_TAG=v${BASH_REMATCH[1]}" >> $GITHUB_ENV
             echo "IS_RELEASE=true" >> $GITHUB_ENV
           else
-<<<<<<< Updated upstream
-            CURRENT_TAG=$(git for-each-ref \
-              --sort=-creatordate \
-              --format='%(refname:short)' \
-              refs/tags \
-              | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+-(rc|preview)\.[0-9]+$' \
-              | head -1)
-
-            if [[ -z "$CURRENT_TAG" ]]; then
-=======
             # workflow_dispatch or push to main — GITHUB_REF is a branch, not a tag.
             # Resolve the current tag by finding the latest RC or preview tag in the repo.
             LATEST_RC=$(git tag -l \
@@ -70,7 +57,6 @@ jobs:
             elif [[ -n "$LATEST_PREVIEW" ]]; then
               CURRENT_TAG="$LATEST_PREVIEW"
             else
->>>>>>> Stashed changes
               CURRENT_TAG="HEAD"
             fi
 
@@ -79,10 +65,7 @@ jobs:
             else
               echo "SLOT=preview" >> $GITHUB_ENV
             fi
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
             echo "CURRENT_TAG=${CURRENT_TAG}" >> $GITHUB_ENV
             echo "IS_RELEASE=false" >> $GITHUB_ENV
           fi
