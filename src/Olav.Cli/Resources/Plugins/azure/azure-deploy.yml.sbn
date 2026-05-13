@@ -1,0 +1,42 @@
+name: Deploy to Azure App Service
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  APP_SERVICE_NAME: {{appServiceName}}
+  RESOURCE_GROUP: {{resourceGroup}}
+  ENVIRONMENT: {{environment}}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: {{environment}}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Publish
+        run: dotnet publish --configuration Release --no-build --output ./publish
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.APP_SERVICE_NAME }}
+          resource-group-name: ${{ env.RESOURCE_GROUP }}
+          publish-profile: ${{ secrets.{{publishProfileSecret}} }}
+          package: ./publish

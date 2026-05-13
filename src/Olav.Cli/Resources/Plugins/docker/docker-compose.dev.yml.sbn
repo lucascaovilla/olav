@@ -1,0 +1,9 @@
+services:
+  web:
+    image: {{ projectNameLower }}-web:${IMAGE_TAG}
+    ports:
+      - "8082:8080"
+    env_file: ../.env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080

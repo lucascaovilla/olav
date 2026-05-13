@@ -1,0 +1,21 @@
+// <copyright file="RedisDependencyInjection.cs" company="{{ namespace }}">
+// Copyright (c) {{ namespace }}.
+// Licensed under the MIT License.
+// </copyright>
+namespace {{ namespace }}.Infrastructure.Persistence.Redis;
+
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+public static class RedisDependencyInjection
+{
+    public static IServiceCollection AddRedis(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        // Requires package: Olav.Infrastructure.Redis
+        // Connection string key: {{ connectionStringName }}
+        _ = configuration;
+        return services;
+    }
+}

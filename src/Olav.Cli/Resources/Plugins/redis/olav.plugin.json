@@ -1,0 +1,30 @@
+{
+  "id": "redis",
+  "version": "0.1.0",
+  "displayName": "Redis Cache",
+  "description": "Scaffolds a Redis cache layer and injects a Redis service into local Docker Compose files.",
+  "author": "olav-official",
+  "category": "infrastructure",
+  "delivery": "package",
+  "compatibility": { "olavMinVersion": "0.1.0" },
+  "nugetPackage": { "id": "Olav.Infrastructure.Redis", "version": "0.1.0" },
+  "persistenceProjectSuffix": "Persistence.Redis",
+  "generates": [
+    {
+      "template": "redis-di.cs.sbn",
+      "output": "src/{{namespace}}.Infrastructure/Persistence/Redis/DependencyInjection.cs"
+    }
+  ],
+  "injectCompose": [
+    {
+      "serviceTemplate": "redis-service.yml.sbn",
+      "serviceName": "redis",
+      "dependsOnCondition": "service_healthy"
+    }
+  ],
+  "parameters": [
+    { "name": "connectionStringName", "type": "string", "default": "DefaultConnection" }
+  ],
+  "conflicts": [],
+  "requires": []
+}

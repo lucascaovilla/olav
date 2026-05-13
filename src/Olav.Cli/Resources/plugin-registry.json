@@ -1,0 +1,11 @@
+{
+  "infrastructure": {
+    "postgres": "embedded://postgres",
+    "sqlserver": "embedded://sqlserver",
+    "redis": "embedded://redis"
+  },
+  "deployment": {
+    "azure": "embedded://azure",
+    "docker": "embedded://docker"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "id": "azure",
+  "version": "0.1.0",
+  "displayName": "Azure App Service Deployment",
+  "description": "Generates a GitHub Actions workflow for deploying to Azure App Service.",
+  "author": "olav-official",
+  "category": "deployment",
+  "delivery": "generation",
+  "compatibility": {
+    "olavMinVersion": "0.1.0"
+  },
+  "generates": [
+    {
+      "template": "azure-deploy.yml.sbn",
+      "output": ".github/workflows/deploy-azure.yml"
+    }
+  ],
+  "parameters": [
+    { "name": "appServiceName", "type": "string" },
+    { "name": "resourceGroup", "type": "string" },
+    { "name": "environment", "type": "string", "default": "production" },
+    { "name": "publishProfileSecret", "type": "string", "default": "AZURE_PUBLISH_PROFILE" }
+  ],
+  "conflicts": [],
+  "requires": []
+}

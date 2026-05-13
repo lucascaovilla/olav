@@ -1,0 +1,30 @@
+{
+  "id": "postgres",
+  "version": "0.1.0",
+  "displayName": "PostgreSQL via EF Core",
+  "description": "Scaffolds a PostgreSQL persistence layer with EF Core and injects a PostgreSQL service into local Docker Compose files.",
+  "author": "olav-official",
+  "category": "infrastructure",
+  "delivery": "package",
+  "compatibility": { "olavMinVersion": "0.1.0" },
+  "nugetPackage": { "id": "Olav.Infrastructure.Postgres", "version": "0.1.0" },
+  "persistenceProjectSuffix": "Persistence.Postgres",
+  "generates": [
+    {
+      "template": "postgres-di.cs.sbn",
+      "output": "src/{{namespace}}.Infrastructure/Persistence/Postgres/DependencyInjection.cs"
+    }
+  ],
+  "injectCompose": [
+    {
+      "serviceTemplate": "postgres-service.yml.sbn",
+      "serviceName": "postgres",
+      "dependsOnCondition": "service_healthy"
+    }
+  ],
+  "parameters": [
+    { "name": "connectionStringName", "type": "string", "default": "DefaultConnection" }
+  ],
+  "conflicts": ["sqlserver"],
+  "requires": []
+}

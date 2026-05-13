@@ -1,0 +1,18 @@
+{
+  "id": "docker",
+  "version": "0.1.0",
+  "displayName": "Docker Compose Deployment",
+  "description": "Generates Docker Compose files for production and staging environments.",
+  "author": "olav-official",
+  "category": "deployment",
+  "delivery": "generation",
+  "compatibility": { "olavMinVersion": "0.1.0" },
+  "generates": [
+    { "template": "docker-compose.yml.sbn", "output": "docker/docker-compose.yml" },
+    { "template": "docker-compose.staging.yml.sbn", "output": "docker/docker-compose.staging.yml" },
+    { "template": "docker-compose.dev.yml.sbn", "output": "docker/docker-compose.dev.yml" }
+  ],
+  "parameters": [],
+  "conflicts": [],
+  "requires": []
+}

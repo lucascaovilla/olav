@@ -1,0 +1,21 @@
+// <copyright file="SqlServerDependencyInjection.cs" company="{{ namespace }}">
+// Copyright (c) {{ namespace }}.
+// Licensed under the MIT License.
+// </copyright>
+namespace {{ namespace }}.Infrastructure.Persistence.SqlServer;
+
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+public static class SqlServerDependencyInjection
+{
+    public static IServiceCollection AddSqlServer(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        // Requires package: Olav.Infrastructure.SqlServer
+        // Connection string key: {{ connectionStringName }}
+        _ = configuration;
+        return services;
+    }
+}
