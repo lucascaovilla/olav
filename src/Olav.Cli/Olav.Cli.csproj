@@ -20,7 +20,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <TemplateVersion>1.0</TemplateVersion>
     <MinSupportedTemplateVersion>1.0</MinSupportedTemplateVersion>
   </PropertyGroup>
@@ -28,6 +28,58 @@
   <ItemGroup>
     <AdditionalFiles Include="../../stylecop.json" />
     <None Include="../../README.md" Pack="true" PackagePath="\" />
+    <InternalsVisibleTo Include="Olav.UnitTests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\plugin-registry.json">
+      <LogicalName>plugin-registry.json</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Plugins\azure\olav.plugin.json">
+      <LogicalName>azure.manifest.json</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Plugins\azure\azure-deploy.yml.sbn">
+      <LogicalName>azure.azure-deploy.yml.sbn</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Plugins\docker\olav.plugin.json">
+      <LogicalName>docker.manifest.json</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Plugins\docker\docker-compose.yml.sbn">
+      <LogicalName>docker.docker-compose.yml.sbn</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Plugins\docker\docker-compose.staging.yml.sbn">
+      <LogicalName>docker.docker-compose.staging.yml.sbn</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Plugins\docker\docker-compose.dev.yml.sbn">
+      <LogicalName>docker.docker-compose.dev.yml.sbn</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Plugins\postgres\olav.plugin.json">
+      <LogicalName>postgres.manifest.json</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Plugins\postgres\postgres-di.cs.sbn">
+      <LogicalName>postgres.postgres-di.cs.sbn</LogicalName>
+      <WithCulture>false</WithCulture>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Plugins\postgres\postgres-service.yml.sbn">
+      <LogicalName>postgres.postgres-service.yml.sbn</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Plugins\sqlserver\olav.plugin.json">
+      <LogicalName>sqlserver.manifest.json</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Plugins\sqlserver\sqlserver-di.cs.sbn">
+      <LogicalName>sqlserver.sqlserver-di.cs.sbn</LogicalName>
+      <WithCulture>false</WithCulture>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Plugins\redis\olav.plugin.json">
+      <LogicalName>redis.manifest.json</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Plugins\redis\redis-di.cs.sbn">
+      <LogicalName>redis.redis-di.cs.sbn</LogicalName>
+      <WithCulture>false</WithCulture>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Plugins\redis\redis-service.yml.sbn">
+      <LogicalName>redis.redis-service.yml.sbn</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 
   <UsingTask TaskName="WriteVersionConstants" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">

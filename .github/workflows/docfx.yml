@@ -24,19 +24,17 @@ jobs:
       - name: Resolve slot
         run: |
           REF="${GITHUB_REF}"
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
           if [[ "$REF" =~ ^refs/tags/v([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+            # Stable release tag pushed directly
             echo "SLOT=releases/v${BASH_REMATCH[1]}" >> $GITHUB_ENV
             echo "CURRENT_TAG=v${BASH_REMATCH[1]}" >> $GITHUB_ENV
             echo "IS_RELEASE=true" >> $GITHUB_ENV
-          elif [[ "$REF" =~ ^refs/tags/(.*-rc\..*)$ ]]; then
-            echo "SLOT=release-candidate" >> $GITHUB_ENV
-            echo "CURRENT_TAG=${BASH_REMATCH[1]}" >> $GITHUB_ENV
-            echo "IS_RELEASE=false" >> $GITHUB_ENV
-          elif [[ "$REF" =~ ^refs/tags/(.*-preview\..*)$ ]]; then
-            echo "SLOT=preview" >> $GITHUB_ENV
-            echo "CURRENT_TAG=${BASH_REMATCH[1]}" >> $GITHUB_ENV
-            echo "IS_RELEASE=false" >> $GITHUB_ENV
           else
+<<<<<<< Updated upstream
             CURRENT_TAG=$(git for-each-ref \
               --sort=-creatordate \
               --format='%(refname:short)' \
@@ -45,6 +43,34 @@ jobs:
               | head -1)
 
             if [[ -z "$CURRENT_TAG" ]]; then
+=======
+            # workflow_dispatch or push to main — GITHUB_REF is a branch, not a tag.
+            # Resolve the current tag by finding the latest RC or preview tag in the repo.
+            LATEST_RC=$(git tag -l \
+              | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+-rc\.[0-9]+$' \
+              | sort -t. -k4 -rn \
+              | head -1)
+
+            LATEST_PREVIEW=$(git tag -l \
+              | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+-preview\.[0-9]+$' \
+              | sort -t. -k4 -rn \
+              | head -1)
+
+            # Pick whichever was created more recently by comparing commit timestamps
+            if [[ -n "$LATEST_RC" && -n "$LATEST_PREVIEW" ]]; then
+              RC_DATE=$(git log -1 --format="%ct" "$LATEST_RC")
+              PREVIEW_DATE=$(git log -1 --format="%ct" "$LATEST_PREVIEW")
+              if [[ "$RC_DATE" -ge "$PREVIEW_DATE" ]]; then
+                CURRENT_TAG="$LATEST_RC"
+              else
+                CURRENT_TAG="$LATEST_PREVIEW"
+              fi
+            elif [[ -n "$LATEST_RC" ]]; then
+              CURRENT_TAG="$LATEST_RC"
+            elif [[ -n "$LATEST_PREVIEW" ]]; then
+              CURRENT_TAG="$LATEST_PREVIEW"
+            else
+>>>>>>> Stashed changes
               CURRENT_TAG="HEAD"
             fi
 
@@ -53,6 +79,10 @@ jobs:
             else
               echo "SLOT=preview" >> $GITHUB_ENV
             fi
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
             echo "CURRENT_TAG=${CURRENT_TAG}" >> $GITHUB_ENV
             echo "IS_RELEASE=false" >> $GITHUB_ENV
           fi
