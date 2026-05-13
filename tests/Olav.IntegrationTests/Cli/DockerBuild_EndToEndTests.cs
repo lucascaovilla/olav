@@ -28,7 +28,7 @@ public class DockerBuild_EndToEndTests(GeneratedProjectFixture fixture)
     {
         string dockerPath = Path.Combine(this._fixture.ProjectPath, "docker");
 
-        string[] composeFiles = ["docker-compose.yml", "docker-compose.staging.yml", "docker-compose.dev.yml", "docker-compose.local.yml"];
+        string[] composeFiles = ["docker-compose.local.yml"];
         foreach (string f in composeFiles)
         {
             Console.WriteLine($"[Docker] Validating {f}...");

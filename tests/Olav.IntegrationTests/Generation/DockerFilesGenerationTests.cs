@@ -20,6 +20,6 @@ public class DockerFilesGenerationTests
         string dockerPath = Path.Combine(this._fixture.ProjectPath, "docker");
 
         Assert.True(File.Exists(Path.Combine(dockerPath, "Dockerfile")));
-        Assert.True(File.Exists(Path.Combine(dockerPath, "docker-compose.yml")));
+        Assert.True(File.Exists(Path.Combine(dockerPath, "docker-compose.local.yml")));
     }
 }

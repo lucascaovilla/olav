@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Olav.Extensions;
 
 namespace Olav.IntegrationTests.Generation.Fixtures;
 
@@ -21,7 +22,7 @@ public class GeneratedProjectFixture : IDisposable
 
         Olav.Program.Main(["new", ProjectName]);
 
-        ProjectPath = Path.Combine(Root, ProjectName);
+        ProjectPath = Path.Combine(Root, ProjectName.ToDashCase());
     }
 
     public void Dispose()

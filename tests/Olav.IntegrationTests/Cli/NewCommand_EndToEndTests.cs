@@ -39,7 +39,7 @@ public class NewCommand_EndToEndTests(GeneratedProjectFixture fixture)
         Assert.True(Directory.Exists(Path.Combine(src, $"{name}.Domain")));
         Assert.True(Directory.Exists(Path.Combine(src, $"{name}.Application")));
         Assert.True(Directory.Exists(Path.Combine(src, $"{name}.Infrastructure")));
-        Assert.True(Directory.Exists(Path.Combine(src, $"{name}.Web")));
+        Assert.True(Directory.Exists(Path.Combine(src, $"{name}.Api")));
     }
 
     [Fact]

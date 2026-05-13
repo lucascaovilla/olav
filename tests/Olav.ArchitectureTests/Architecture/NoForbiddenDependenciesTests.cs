@@ -32,9 +32,13 @@ public class NoForbiddenDependenciesTests
     [Fact]
     public void Only_Infrastructure_Should_Use_System_Diagnostics()
     {
+        // Olav.Generation is also exempt: C# records in that namespace emit
+        // compiler-generated DebuggerBrowsableAttribute references implicitly.
         Types.InAssembly(typeof(Olav.Program).Assembly)
             .That()
             .DoNotResideInNamespace($"{BaseNamespace}.Infrastructure")
+            .And()
+            .DoNotResideInNamespace($"{BaseNamespace}.Generation")
             .ShouldNot()
             .HaveDependencyOn("System.Diagnostics")
             .GetResult()
