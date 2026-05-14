@@ -19,7 +19,7 @@ public static class InfrastructureExtensionsTemplate
     public static string Generate(string projectName, string entityName)
     {
         string registration =
-            $"services.AddScoped<{projectName}.Domain.{entityName}.Repositories.I{entityName}Repository, {projectName}.Infrastructure.Repositories.{entityName}.{entityName}Repository>();";
+            $"services.AddScoped<{projectName}.Domain.Repositories.I{entityName}Repository, {projectName}.Infrastructure.Repositories.{entityName}Repository>();";
 
         return GenerateFile(projectName, registration);
     }
@@ -29,13 +29,12 @@ public static class InfrastructureExtensionsTemplate
     /// including the first infrastructure service registration line.
     /// </summary>
     /// <param name="projectName">Project namespace (e.g. <c>MyApp</c>).</param>
-    /// <param name="entityName">Entity folder name (e.g. <c>Email</c>).</param>
     /// <param name="serviceName">Service class name (e.g. <c>EmailService</c>).</param>
     /// <returns>InfrastructureExtensions.cs file content.</returns>
-    public static string GenerateForService(string projectName, string entityName, string serviceName)
+    public static string GenerateForService(string projectName, string serviceName)
     {
         string registration =
-            $"services.AddScoped<{projectName}.Application.Services.{entityName}.I{serviceName}, {projectName}.Infrastructure.Services.{entityName}.{serviceName}>();";
+            $"services.AddScoped<{projectName}.Application.Services.I{serviceName}, {projectName}.Infrastructure.Services.{serviceName}>();";
 
         return GenerateFile(projectName, registration);
     }

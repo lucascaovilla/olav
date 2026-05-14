@@ -14,8 +14,8 @@ public class ServiceGeneratorTests
 
         new ServiceGenerator("Order", "OrderService", "MyApp", root).Generate();
 
-        Assert.True(File.Exists(Path.Combine(root, "src", "MyApp.Application", "Services", "Order", "IOrderService.cs")));
-        Assert.True(File.Exists(Path.Combine(root, "src", "MyApp.Application", "Services", "Order", "OrderService.cs")));
+        Assert.True(File.Exists(Path.Combine(root, "src", "MyApp.Application", "Services", "IOrderService.cs")));
+        Assert.True(File.Exists(Path.Combine(root, "src", "MyApp.Application", "Services", "OrderService.cs")));
     }
 
     [Fact]
@@ -25,8 +25,8 @@ public class ServiceGeneratorTests
 
         new ServiceGenerator("Order", "OrderService", "MyApp", root).Generate();
 
-        string content = File.ReadAllText(Path.Combine(root, "src", "MyApp.Application", "Services", "Order", "IOrderService.cs"));
-        Assert.Contains("namespace MyApp.Application.Services.Order;", content);
+        string content = File.ReadAllText(Path.Combine(root, "src", "MyApp.Application", "Services", "IOrderService.cs"));
+        Assert.Contains("namespace MyApp.Application.Services;", content);
         Assert.Contains("public interface IOrderService", content);
     }
 
@@ -37,9 +37,9 @@ public class ServiceGeneratorTests
 
         new ServiceGenerator("Order", "OrderService", "MyApp", root).Generate();
 
-        string content = File.ReadAllText(Path.Combine(root, "src", "MyApp.Application", "Services", "Order", "OrderService.cs"));
-        Assert.Contains("namespace MyApp.Application.Services.Order;", content);
-        Assert.Contains("MyApp.Domain.Order.Repositories", content);
+        string content = File.ReadAllText(Path.Combine(root, "src", "MyApp.Application", "Services", "OrderService.cs"));
+        Assert.Contains("namespace MyApp.Application.Services;", content);
+        Assert.Contains("MyApp.Domain.Repositories", content);
         Assert.Contains("IOrderRepository", content);
         Assert.Contains("public OrderService(IOrderRepository repository)", content);
     }
@@ -80,8 +80,8 @@ public class ServiceGeneratorTests
 
         new ServiceGenerator("Email", "EmailService", "MyApp", root, ServiceGenerator.ServiceLayer.Infrastructure).Generate();
 
-        Assert.True(File.Exists(Path.Combine(root, "src", "MyApp.Application", "Services", "Email", "IEmailService.cs")));
-        Assert.True(File.Exists(Path.Combine(root, "src", "MyApp.Infrastructure", "Services", "Email", "EmailService.cs")));
+        Assert.True(File.Exists(Path.Combine(root, "src", "MyApp.Application", "Services", "IEmailService.cs")));
+        Assert.True(File.Exists(Path.Combine(root, "src", "MyApp.Infrastructure", "Services", "EmailService.cs")));
     }
 
     [Fact]
@@ -91,8 +91,8 @@ public class ServiceGeneratorTests
 
         new ServiceGenerator("Email", "EmailService", "MyApp", root, ServiceGenerator.ServiceLayer.Infrastructure).Generate();
 
-        string content = File.ReadAllText(Path.Combine(root, "src", "MyApp.Application", "Services", "Email", "IEmailService.cs"));
-        Assert.Contains("namespace MyApp.Application.Services.Email;", content);
+        string content = File.ReadAllText(Path.Combine(root, "src", "MyApp.Application", "Services", "IEmailService.cs"));
+        Assert.Contains("namespace MyApp.Application.Services;", content);
         Assert.Contains("public interface IEmailService", content);
     }
 
@@ -103,9 +103,9 @@ public class ServiceGeneratorTests
 
         new ServiceGenerator("Email", "EmailService", "MyApp", root, ServiceGenerator.ServiceLayer.Infrastructure).Generate();
 
-        string content = File.ReadAllText(Path.Combine(root, "src", "MyApp.Infrastructure", "Services", "Email", "EmailService.cs"));
-        Assert.Contains("namespace MyApp.Infrastructure.Services.Email;", content);
-        Assert.Contains("using MyApp.Application.Services.Email;", content);
+        string content = File.ReadAllText(Path.Combine(root, "src", "MyApp.Infrastructure", "Services", "EmailService.cs"));
+        Assert.Contains("namespace MyApp.Infrastructure.Services;", content);
+        Assert.Contains("using MyApp.Application.Services;", content);
         Assert.Contains("public class EmailService : IEmailService", content);
     }
 
@@ -119,8 +119,8 @@ public class ServiceGeneratorTests
         string diPath = Path.Combine(root, "src", "MyApp.Infrastructure", "DependencyInjection.cs");
         Assert.True(File.Exists(diPath));
         string content = File.ReadAllText(diPath);
-        Assert.Contains("MyApp.Application.Services.Email.IEmailService", content);
-        Assert.Contains("MyApp.Infrastructure.Services.Email.EmailService", content);
+        Assert.Contains("MyApp.Application.Services.IEmailService", content);
+        Assert.Contains("MyApp.Infrastructure.Services.EmailService", content);
     }
 
     [Fact]

@@ -19,15 +19,25 @@ public static class AddServiceCommand
     /// <param name="args">Full argument list (including the leading <c>add service</c> tokens).</param>
     public static void Execute(string[] args)
     {
-        if (args.Length < 4)
+        if (args.Length < 3)
         {
-            Console.WriteLine("Usage: olav add service <EntityName> <ServiceName> [application|infrastructure]");
+            Console.WriteLine("Usage: olav add service <ServiceName> [--entity <EntityName>] [application|infrastructure]");
             return;
         }
 
-        string entityName = args[2];
-        string serviceName = args[3];
-        ServiceGenerator.ServiceLayer layer = ParseLayer(args.Length > 4 ? args[4] : null);
+        string serviceName = args[2];
+        string? entityName = ParseFlag(args, "--entity");
+        string? layerArg = null;
+        for (int i = 3; i < args.Length; i++)
+        {
+            if (!args[i].StartsWith("--", StringComparison.Ordinal) && args[i - 1] != "--entity")
+            {
+                layerArg = args[i];
+                break;
+            }
+        }
+
+        ServiceGenerator.ServiceLayer layer = ParseLayer(layerArg);
         string root = ProjectRootHelper.FindProjectRoot(Directory.GetCurrentDirectory());
         string? plugin = InstalledPluginHelper.ResolveInfrastructurePlugin(root);
 
@@ -40,6 +50,19 @@ public static class AddServiceCommand
         {
             Console.WriteLine(ex.Message);
         }
+    }
+
+    private static string? ParseFlag(string[] args, string flag)
+    {
+        for (int i = 0; i < args.Length - 1; i++)
+        {
+            if (args[i] == flag)
+            {
+                return args[i + 1];
+            }
+        }
+
+        return null;
     }
 
     private static ServiceGenerator.ServiceLayer ParseLayer(string? value)

@@ -16,7 +16,7 @@ public class ServiceGenerator
     private readonly string serviceName;
     private readonly string projectName;
     private readonly string root;
-    private readonly string entityName;
+    private readonly string? entityName;
     private readonly ServiceLayer layer;
     private readonly string? plugin;
 
@@ -33,7 +33,7 @@ public class ServiceGenerator
     /// Passed to the template for future plugin-aware generation variants.
     /// </param>
     public ServiceGenerator(
-        string entityName,
+        string? entityName,
         string serviceName,
         string projectName,
         string root,
@@ -85,7 +85,6 @@ public class ServiceGenerator
             "src",
             $"{this.projectName}.Application",
             "Services",
-            this.entityName,
             $"I{this.serviceName}.cs");
 
         FileSystem.WriteFile(interfacePath, IServiceTemplate.Generate(this.projectName, this.entityName, this.serviceName));
@@ -98,7 +97,6 @@ public class ServiceGenerator
             "src",
             $"{this.projectName}.Application",
             "Services",
-            this.entityName,
             $"{this.serviceName}.cs");
 
         FileSystem.WriteFile(implPath, ServiceTemplate.Generate(this.projectName, this.entityName, this.serviceName, this.plugin));
@@ -111,10 +109,9 @@ public class ServiceGenerator
             "src",
             $"{this.projectName}.Infrastructure",
             "Services",
-            this.entityName,
             $"{this.serviceName}.cs");
 
-        FileSystem.WriteFile(implPath, InfrastructureServiceTemplate.Generate(this.projectName, this.entityName, this.serviceName));
+        FileSystem.WriteFile(implPath, InfrastructureServiceTemplate.Generate(this.projectName, this.serviceName));
     }
 
     private void RegisterInApplicationDi()
@@ -126,11 +123,11 @@ public class ServiceGenerator
             "DependencyInjection.cs");
 
         string registration =
-            $"services.AddScoped<{this.projectName}.Application.Services.{this.entityName}.I{this.serviceName}, {this.projectName}.Application.Services.{this.entityName}.{this.serviceName}>();";
+            $"services.AddScoped<{this.projectName}.Application.Services.I{this.serviceName}, {this.projectName}.Application.Services.{this.serviceName}>();";
 
         if (!File.Exists(diPath))
         {
-            FileSystem.WriteFile(diPath, ApplicationExtensionsTemplate.Generate(this.projectName, this.entityName, this.serviceName));
+            FileSystem.WriteFile(diPath, ApplicationExtensionsTemplate.Generate(this.projectName, this.serviceName));
         }
         else
         {
@@ -147,11 +144,11 @@ public class ServiceGenerator
             "DependencyInjection.cs");
 
         string registration =
-            $"services.AddScoped<{this.projectName}.Application.Services.{this.entityName}.I{this.serviceName}, {this.projectName}.Infrastructure.Services.{this.entityName}.{this.serviceName}>();";
+            $"services.AddScoped<{this.projectName}.Application.Services.I{this.serviceName}, {this.projectName}.Infrastructure.Services.{this.serviceName}>();";
 
         if (!File.Exists(diPath))
         {
-            FileSystem.WriteFile(diPath, InfrastructureExtensionsTemplate.GenerateForService(this.projectName, this.entityName, this.serviceName));
+            FileSystem.WriteFile(diPath, InfrastructureExtensionsTemplate.GenerateForService(this.projectName, this.serviceName));
         }
         else
         {

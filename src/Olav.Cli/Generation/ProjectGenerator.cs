@@ -38,6 +38,7 @@ public class ProjectGenerator
         DotnetRunner.Run($"new classlib -n {this.name}.Infrastructure -f net10.0", src);
         DotnetRunner.Run($"new webapi -n {this.name}.Api -f net10.0 --no-https", src);
 
+        this.AddProjectReferences();
         this.AddPackages();
     }
 
@@ -53,11 +54,6 @@ public class ProjectGenerator
 
         DotnetRunner.Run($"add src/{this.name}.Api/{this.name}.Api.csproj reference src/{this.name}.Application/{this.name}.Application.csproj", this.root);
         DotnetRunner.Run($"add src/{this.name}.Api/{this.name}.Api.csproj reference src/{this.name}.Infrastructure/{this.name}.Infrastructure.csproj", this.root);
-
-        DotnetRunner.Run($"add tests/{this.name}.ArchitectureTests/{this.name}.ArchitectureTests.csproj reference src/{this.name}.Application/{this.name}.Application.csproj", this.root);
-        DotnetRunner.Run($"add tests/{this.name}.ArchitectureTests/{this.name}.ArchitectureTests.csproj reference src/{this.name}.Domain/{this.name}.Domain.csproj", this.root);
-
-        DotnetRunner.Run($"add tests/{this.name}.IntegrationTests/{this.name}.IntegrationTests.csproj reference src/{this.name}.Api/{this.name}.Api.csproj", this.root);
     }
 
     /// <summary>
@@ -65,6 +61,7 @@ public class ProjectGenerator
     /// </summary>
     private void AddPackages()
     {
+        DotnetRunner.Run($"add src/{this.name}.Application/{this.name}.Application.csproj package Microsoft.Extensions.DependencyInjection.Abstractions", this.root);
         DotnetRunner.Run($"add src/{this.name}.Api/{this.name}.Api.csproj package Serilog.AspNetCore", this.root);
         DotnetRunner.Run($"add src/{this.name}.Api/{this.name}.Api.csproj package Serilog.Sinks.Console", this.root);
 

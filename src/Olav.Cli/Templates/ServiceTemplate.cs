@@ -21,25 +21,40 @@ public static class ServiceTemplate
     /// Reserved for future template variants; currently unused.
     /// </param>
     /// <returns>Service implementation file content.</returns>
-    public static string Generate(string projectName, string entityName, string serviceName, string? plugin = null)
+    public static string Generate(string projectName, string? entityName, string serviceName, string? plugin = null)
     {
-        return $$"""
-        namespace {{projectName}}.Application.Services.{{entityName}};
+        if (entityName != null)
+        {
+            return $$"""
+            namespace {{projectName}}.Application.Services;
 
-        using {{projectName}}.Domain.{{entityName}}.Repositories;
+            using {{projectName}}.Domain.Entities;
+            using {{projectName}}.Domain.Repositories;
+
+            /// <summary>
+            /// Implementation of <see cref="I{{serviceName}}"/>.
+            /// </summary>
+            public class {{serviceName}} : I{{serviceName}}
+            {
+                private readonly I{{entityName}}Repository repository;
+
+                /// <summary>
+                /// Initializes a new instance of the <see cref="{{serviceName}}"/> class.
+                /// </summary>
+                /// <param name="repository">The <see cref="{{entityName}}"/> repository.</param>
+                public {{serviceName}}(I{{entityName}}Repository repository) => this.repository = repository;
+            }
+            """;
+        }
+
+        return $$"""
+        namespace {{projectName}}.Application.Services;
 
         /// <summary>
         /// Implementation of <see cref="I{{serviceName}}"/>.
         /// </summary>
         public class {{serviceName}} : I{{serviceName}}
         {
-            private readonly I{{entityName}}Repository repository;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="{{serviceName}}"/> class.
-            /// </summary>
-            /// <param name="repository">The <see cref="{{entityName}}"/> repository.</param>
-            public {{serviceName}}(I{{entityName}}Repository repository) => this.repository = repository;
         }
         """;
     }

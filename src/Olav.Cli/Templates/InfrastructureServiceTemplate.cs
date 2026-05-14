@@ -16,15 +16,14 @@ public static class InfrastructureServiceTemplate
     /// The class implements the Application-layer interface.
     /// </summary>
     /// <param name="projectName">Project namespace (e.g. <c>MyApp</c>).</param>
-    /// <param name="entityName">Entity folder name (e.g. <c>Email</c>).</param>
     /// <param name="serviceName">Service class name (e.g. <c>EmailService</c>).</param>
     /// <returns>Infrastructure service implementation file content.</returns>
-    public static string Generate(string projectName, string entityName, string serviceName)
+    public static string Generate(string projectName, string serviceName)
     {
         return $$"""
-        namespace {{projectName}}.Infrastructure.Services.{{entityName}};
+        namespace {{projectName}}.Infrastructure.Services;
 
-        using {{projectName}}.Application.Services.{{entityName}};
+        using {{projectName}}.Application.Services;
 
         /// <summary>
         /// Infrastructure implementation of <see cref="I{{serviceName}}"/>.
