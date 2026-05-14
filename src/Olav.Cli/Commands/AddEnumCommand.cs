@@ -19,20 +19,19 @@ public static class AddEnumCommand
     /// <param name="args">Full argument list (including the leading <c>add enum</c> tokens).</param>
     public static void Execute(string[] args)
     {
-        if (args.Length < 4)
+        if (args.Length < 3)
         {
-            Console.WriteLine("Usage: olav add enum <EntityName> <EnumName>");
+            Console.WriteLine("Usage: olav add enum <EnumName>");
             return;
         }
 
-        string entityName = args[2];
-        string enumName = args[3];
+        string enumName = args[2];
         string root = ProjectRootHelper.FindProjectRoot(Directory.GetCurrentDirectory());
 
         try
         {
             string projectName = ProjectNameHelper.DiscoverProjectName(root);
-            new DomainEnumGenerator(entityName, enumName, projectName, root).Generate();
+            new DomainEnumGenerator(enumName, projectName, root).Generate();
         }
         catch (InvalidOperationException ex)
         {

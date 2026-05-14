@@ -36,6 +36,8 @@ public class NamingConventionTests
             .DoNotHaveNameEndingWith("Injector")
             .And()
             .DoNotHaveNameEndingWith("Layer")
+            .And()
+            .DoNotHaveNameEndingWith("Kind")
             .Should()
             .HaveNameEndingWith("Generator")
             .GetResult()

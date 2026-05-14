@@ -31,7 +31,7 @@ public class EntityGenerator
     }
 
     /// <summary>
-    /// Generates the entity file at <c>src/{projectName}.Domain/{entityName}/Entities/{entityName}.cs</c>.
+    /// Generates the entity file at <c>src/{projectName}.Domain/Entities/{entityName}.cs</c>.
     /// </summary>
     public void Generate()
     {
@@ -39,7 +39,6 @@ public class EntityGenerator
             this.root,
             "src",
             $"{this.projectName}.Domain",
-            this.entityName,
             "Entities",
             $"{this.entityName}.cs");
 

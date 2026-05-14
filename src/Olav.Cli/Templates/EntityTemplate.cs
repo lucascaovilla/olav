@@ -18,7 +18,7 @@ public static class EntityTemplate
     public static string Generate(string projectName, string entityName)
     {
         return $$"""
-        namespace {{projectName}}.Domain.{{entityName}}.Entities;
+        namespace {{projectName}}.Domain.Entities;
 
         /// <summary>
         /// Represents the {{entityName}} domain entity.

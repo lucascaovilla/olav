@@ -14,8 +14,8 @@ public class RepositoryGeneratorTests
 
         new RepositoryGenerator("Order", "MyApp", root, null).Generate();
 
-        Assert.True(File.Exists(Path.Combine(root, "src", "MyApp.Domain", "Order", "Repositories", "IOrderRepository.cs")));
-        Assert.True(File.Exists(Path.Combine(root, "src", "MyApp.Infrastructure", "Repositories", "Order", "OrderRepository.cs")));
+        Assert.True(File.Exists(Path.Combine(root, "src", "MyApp.Domain", "Repositories", "IOrderRepository.cs")));
+        Assert.True(File.Exists(Path.Combine(root, "src", "MyApp.Infrastructure", "Repositories", "OrderRepository.cs")));
     }
 
     [Fact]
@@ -25,8 +25,8 @@ public class RepositoryGeneratorTests
 
         new RepositoryGenerator("Order", "MyApp", root, null).Generate();
 
-        string content = File.ReadAllText(Path.Combine(root, "src", "MyApp.Domain", "Order", "Repositories", "IOrderRepository.cs"));
-        Assert.Contains("namespace MyApp.Domain.Order.Repositories;", content);
+        string content = File.ReadAllText(Path.Combine(root, "src", "MyApp.Domain", "Repositories", "IOrderRepository.cs"));
+        Assert.Contains("namespace MyApp.Domain.Repositories;", content);
         Assert.Contains("public interface IOrderRepository", content);
         Assert.Contains("GetByIdAsync", content);
         Assert.Contains("GetAllAsync", content);
@@ -42,8 +42,8 @@ public class RepositoryGeneratorTests
 
         new RepositoryGenerator("Order", "MyApp", root, null).Generate();
 
-        string content = File.ReadAllText(Path.Combine(root, "src", "MyApp.Infrastructure", "Repositories", "Order", "OrderRepository.cs"));
-        Assert.Contains("namespace MyApp.Infrastructure.Repositories.Order;", content);
+        string content = File.ReadAllText(Path.Combine(root, "src", "MyApp.Infrastructure", "Repositories", "OrderRepository.cs"));
+        Assert.Contains("namespace MyApp.Infrastructure.Repositories;", content);
         Assert.Contains("public class OrderRepository : IOrderRepository", content);
         Assert.Contains("NotImplementedException", content);
     }
@@ -55,7 +55,7 @@ public class RepositoryGeneratorTests
 
         new RepositoryGenerator("Order", "MyApp", root, "postgres").Generate();
 
-        string implPath = Path.Combine(root, "src", "MyApp.Infrastructure", "Persistence", "Postgres", "Repositories", "Order", "OrderRepository.cs");
+        string implPath = Path.Combine(root, "src", "MyApp.Infrastructure", "Persistence", "Postgres", "Repositories", "OrderRepository.cs");
         Assert.True(File.Exists(implPath));
         string content = File.ReadAllText(implPath);
         Assert.Contains("Microsoft.EntityFrameworkCore", content);
@@ -70,7 +70,7 @@ public class RepositoryGeneratorTests
 
         new RepositoryGenerator("Order", "MyApp", root, "sqlserver").Generate();
 
-        string implPath = Path.Combine(root, "src", "MyApp.Infrastructure", "Persistence", "SqlServer", "Repositories", "Order", "OrderRepository.cs");
+        string implPath = Path.Combine(root, "src", "MyApp.Infrastructure", "Persistence", "SqlServer", "Repositories", "OrderRepository.cs");
         Assert.True(File.Exists(implPath));
         string content = File.ReadAllText(implPath);
         Assert.Contains("Microsoft.EntityFrameworkCore", content);
@@ -83,7 +83,7 @@ public class RepositoryGeneratorTests
 
         new RepositoryGenerator("Order", "MyApp", root, "redis").Generate();
 
-        string implPath = Path.Combine(root, "src", "MyApp.Infrastructure", "Persistence", "Redis", "Repositories", "Order", "OrderRepository.cs");
+        string implPath = Path.Combine(root, "src", "MyApp.Infrastructure", "Persistence", "Redis", "Repositories", "OrderRepository.cs");
         Assert.True(File.Exists(implPath));
         string content = File.ReadAllText(implPath);
         Assert.Contains("StackExchange.Redis", content);
@@ -126,8 +126,8 @@ public class RepositoryGeneratorTests
 
         new RepositoryGenerator("Order", "MyApp", root, "postgres").Generate();
 
-        Assert.True(File.Exists(Path.Combine(root, "src", "MyApp.Infrastructure", "Persistence", "Postgres", "Repositories", "Order", "OrderRepository.cs")));
-        Assert.False(File.Exists(Path.Combine(root, "src", "MyApp.Infrastructure", "Repositories", "Order", "OrderRepository.cs")));
+        Assert.True(File.Exists(Path.Combine(root, "src", "MyApp.Infrastructure", "Persistence", "Postgres", "Repositories", "OrderRepository.cs")));
+        Assert.False(File.Exists(Path.Combine(root, "src", "MyApp.Infrastructure", "Repositories", "OrderRepository.cs")));
     }
 
     [Fact]
@@ -137,8 +137,8 @@ public class RepositoryGeneratorTests
 
         new RepositoryGenerator("Order", "MyApp", root, "postgres").Generate();
 
-        string content = File.ReadAllText(Path.Combine(root, "src", "MyApp.Infrastructure", "Persistence", "Postgres", "Repositories", "Order", "OrderRepository.cs"));
-        Assert.Contains("namespace MyApp.Infrastructure.Persistence.Postgres.Repositories.Order;", content);
+        string content = File.ReadAllText(Path.Combine(root, "src", "MyApp.Infrastructure", "Persistence", "Postgres", "Repositories", "OrderRepository.cs"));
+        Assert.Contains("namespace MyApp.Infrastructure.Persistence.Postgres.Repositories;", content);
     }
 
     [Fact]
@@ -151,8 +151,8 @@ public class RepositoryGeneratorTests
         string diPath = Path.Combine(root, "src", "MyApp.Infrastructure", "Persistence", "Postgres", "DependencyInjection.cs");
         Assert.True(File.Exists(diPath));
         string content = File.ReadAllText(diPath);
-        Assert.Contains("MyApp.Domain.Order.Repositories.IOrderRepository", content);
-        Assert.Contains("MyApp.Infrastructure.Persistence.Postgres.Repositories.Order.OrderRepository", content);
+        Assert.Contains("MyApp.Domain.Repositories.IOrderRepository", content);
+        Assert.Contains("MyApp.Infrastructure.Persistence.Postgres.Repositories.OrderRepository", content);
         Assert.False(File.Exists(Path.Combine(root, "src", "MyApp.Infrastructure", "DependencyInjection.cs")));
     }
 

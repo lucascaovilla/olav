@@ -39,11 +39,11 @@ public static class RepositoryTemplate
     private static string GenerateEfCore(string projectName, string entityName, string implProject)
     {
         return $$"""
-        namespace {{implProject}}.Repositories.{{entityName}};
+        namespace {{implProject}}.Repositories;
 
         using Microsoft.EntityFrameworkCore;
-        using {{projectName}}.Domain.{{entityName}}.Entities;
-        using {{projectName}}.Domain.{{entityName}}.Repositories;
+        using {{projectName}}.Domain.Entities;
+        using {{projectName}}.Domain.Repositories;
 
         /// <summary>
         /// EF Core implementation of <see cref="I{{entityName}}Repository"/>.
@@ -56,15 +56,22 @@ public static class RepositoryTemplate
             /// Initializes a new instance of the <see cref="{{entityName}}Repository"/> class.
             /// </summary>
             /// <param name="context">The EF Core database context.</param>
-            public {{entityName}}Repository({{projectName}}DbContext context) => this.context = context;
+            public {{entityName}}Repository({{projectName}}DbContext context)
+            {
+                this.context = context;
+            }
 
             /// <inheritdoc/>
             public async Task<{{entityName}}?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
-                => await this.context.Set<{{entityName}}>().FindAsync([id], cancellationToken);
+            {
+                return await this.context.Set<{{entityName}}>().FindAsync([id], cancellationToken);
+            }
 
             /// <inheritdoc/>
             public async Task<IEnumerable<{{entityName}}>> GetAllAsync(CancellationToken cancellationToken = default)
-                => await this.context.Set<{{entityName}}>().ToListAsync(cancellationToken);
+            {
+                return await this.context.Set<{{entityName}}>().ToListAsync(cancellationToken);
+            }
 
             /// <inheritdoc/>
             public async Task AddAsync({{entityName}} entity, CancellationToken cancellationToken = default)
@@ -97,11 +104,11 @@ public static class RepositoryTemplate
     private static string GenerateRedis(string projectName, string entityName, string implProject)
     {
         return $$"""
-        namespace {{implProject}}.Repositories.{{entityName}};
+        namespace {{implProject}}.Repositories;
 
         using StackExchange.Redis;
-        using {{projectName}}.Domain.{{entityName}}.Entities;
-        using {{projectName}}.Domain.{{entityName}}.Repositories;
+        using {{projectName}}.Domain.Entities;
+        using {{projectName}}.Domain.Repositories;
 
         /// <summary>
         /// Redis implementation of <see cref="I{{entityName}}Repository"/>.
@@ -114,27 +121,40 @@ public static class RepositoryTemplate
             /// Initializes a new instance of the <see cref="{{entityName}}Repository"/> class.
             /// </summary>
             /// <param name="redis">The Redis connection multiplexer.</param>
-            public {{entityName}}Repository(IConnectionMultiplexer redis) => this.redis = redis;
+            public {{entityName}}Repository(IConnectionMultiplexer redis)
+            {
+                this.redis = redis;
+            }
 
             /// <inheritdoc/>
             public Task<{{entityName}}?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
-                => throw new NotImplementedException();
+            {
+                throw new NotImplementedException();
+            }
 
             /// <inheritdoc/>
             public Task<IEnumerable<{{entityName}}>> GetAllAsync(CancellationToken cancellationToken = default)
-                => throw new NotImplementedException();
+            {
+                throw new NotImplementedException();
+            }
 
             /// <inheritdoc/>
             public Task AddAsync({{entityName}} entity, CancellationToken cancellationToken = default)
-                => throw new NotImplementedException();
+            {
+                throw new NotImplementedException();
+            }
 
             /// <inheritdoc/>
             public Task UpdateAsync({{entityName}} entity, CancellationToken cancellationToken = default)
-                => throw new NotImplementedException();
+            {
+                throw new NotImplementedException();
+            }
 
             /// <inheritdoc/>
             public Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
-                => throw new NotImplementedException();
+            {
+                throw new NotImplementedException();
+            }
         }
         """;
     }
@@ -142,10 +162,10 @@ public static class RepositoryTemplate
     private static string GenerateStub(string projectName, string entityName)
     {
         return $$"""
-        namespace {{projectName}}.Infrastructure.Repositories.{{entityName}};
+        namespace {{projectName}}.Infrastructure.Repositories;
 
-        using {{projectName}}.Domain.{{entityName}}.Entities;
-        using {{projectName}}.Domain.{{entityName}}.Repositories;
+        using {{projectName}}.Domain.Entities;
+        using {{projectName}}.Domain.Repositories;
 
         /// <summary>
         /// Stub implementation of <see cref="I{{entityName}}Repository"/>.
@@ -155,23 +175,33 @@ public static class RepositoryTemplate
         {
             /// <inheritdoc/>
             public Task<{{entityName}}?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
-                => throw new NotImplementedException();
+            {
+                throw new NotImplementedException();
+            }
 
             /// <inheritdoc/>
             public Task<IEnumerable<{{entityName}}>> GetAllAsync(CancellationToken cancellationToken = default)
-                => throw new NotImplementedException();
+            {
+                throw new NotImplementedException();
+            }
 
             /// <inheritdoc/>
             public Task AddAsync({{entityName}} entity, CancellationToken cancellationToken = default)
-                => throw new NotImplementedException();
+            {
+                throw new NotImplementedException();
+            }
 
             /// <inheritdoc/>
             public Task UpdateAsync({{entityName}} entity, CancellationToken cancellationToken = default)
-                => throw new NotImplementedException();
+            {
+                throw new NotImplementedException();
+            }
 
             /// <inheritdoc/>
             public Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
-                => throw new NotImplementedException();
+            {
+                throw new NotImplementedException();
+            }
         }
         """;
     }

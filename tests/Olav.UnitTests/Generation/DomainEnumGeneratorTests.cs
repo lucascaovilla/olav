@@ -12,9 +12,9 @@ public class DomainEnumGeneratorTests
     {
         string root = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
 
-        new DomainEnumGenerator("Order", "OrderStatus", "MyApp", root).Generate();
+        new DomainEnumGenerator("OrderStatus", "MyApp", root).Generate();
 
-        string expectedPath = Path.Combine(root, "src", "MyApp.Domain", "Order", "Enums", "OrderStatus.cs");
+        string expectedPath = Path.Combine(root, "src", "MyApp.Domain", "Enums", "OrderStatus.cs");
         Assert.True(File.Exists(expectedPath));
     }
 
@@ -23,10 +23,10 @@ public class DomainEnumGeneratorTests
     {
         string root = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
 
-        new DomainEnumGenerator("Order", "OrderStatus", "MyApp", root).Generate();
+        new DomainEnumGenerator("OrderStatus", "MyApp", root).Generate();
 
-        string content = File.ReadAllText(Path.Combine(root, "src", "MyApp.Domain", "Order", "Enums", "OrderStatus.cs"));
-        Assert.Contains("namespace MyApp.Domain.Order.Enums;", content);
+        string content = File.ReadAllText(Path.Combine(root, "src", "MyApp.Domain", "Enums", "OrderStatus.cs"));
+        Assert.Contains("namespace MyApp.Domain.Enums;", content);
         Assert.Contains("public enum OrderStatus", content);
     }
 }

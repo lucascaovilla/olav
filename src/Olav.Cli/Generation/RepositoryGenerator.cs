@@ -63,7 +63,6 @@ public class RepositoryGenerator
             this.root,
             "src",
             $"{this.projectName}.Domain",
-            this.entityName,
             "Repositories",
             $"I{this.entityName}Repository.cs");
 
@@ -80,14 +79,12 @@ public class RepositoryGenerator
                 "Persistence",
                 suffix.Split('.')[^1],
                 "Repositories",
-                this.entityName,
                 $"{this.entityName}Repository.cs")
             : Path.Combine(
                 this.root,
                 "src",
                 $"{this.projectName}.Infrastructure",
                 "Repositories",
-                this.entityName,
                 $"{this.entityName}Repository.cs");
 
         FileSystem.WriteFile(interfacePath, IRepositoryTemplate.Generate(this.projectName, this.entityName));
@@ -113,7 +110,7 @@ public class RepositoryGenerator
                 "DependencyInjection.cs");
 
         string registration =
-            $"services.AddScoped<{this.projectName}.Domain.{this.entityName}.Repositories.I{this.entityName}Repository, {implProject}.Repositories.{this.entityName}.{this.entityName}Repository>();";
+            $"services.AddScoped<{this.projectName}.Domain.Repositories.I{this.entityName}Repository, {implProject}.Repositories.{this.entityName}Repository>();";
 
         if (!File.Exists(diPath))
         {

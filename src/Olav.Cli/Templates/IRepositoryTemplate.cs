@@ -18,9 +18,9 @@ public static class IRepositoryTemplate
     public static string Generate(string projectName, string entityName)
     {
         return $$"""
-        namespace {{projectName}}.Domain.{{entityName}}.Repositories;
+        namespace {{projectName}}.Domain.Repositories;
 
-        using {{projectName}}.Domain.{{entityName}}.Entities;
+        using {{projectName}}.Domain.Entities;
 
         /// <summary>
         /// Repository contract for <see cref="{{entityName}}"/>.
@@ -28,19 +28,19 @@ public static class IRepositoryTemplate
         public interface I{{entityName}}Repository
         {
             /// <summary>Gets a <see cref="{{entityName}}"/> by its identifier.</summary>
-            Task<{{entityName}}?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+            public Task<{{entityName}}?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
             /// <summary>Returns all <see cref="{{entityName}}"/> records.</summary>
-            Task<IEnumerable<{{entityName}}>> GetAllAsync(CancellationToken cancellationToken = default);
+            public Task<IEnumerable<{{entityName}}>> GetAllAsync(CancellationToken cancellationToken = default);
 
             /// <summary>Persists a new <see cref="{{entityName}}"/>.</summary>
-            Task AddAsync({{entityName}} entity, CancellationToken cancellationToken = default);
+            public Task AddAsync({{entityName}} entity, CancellationToken cancellationToken = default);
 
             /// <summary>Persists changes to an existing <see cref="{{entityName}}"/>.</summary>
-            Task UpdateAsync({{entityName}} entity, CancellationToken cancellationToken = default);
+            public Task UpdateAsync({{entityName}} entity, CancellationToken cancellationToken = default);
 
             /// <summary>Removes a <see cref="{{entityName}}"/> by its identifier.</summary>
-            Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
+            public Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
         }
         """;
     }

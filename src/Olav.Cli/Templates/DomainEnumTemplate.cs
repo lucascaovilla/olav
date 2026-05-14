@@ -10,16 +10,15 @@ namespace Olav.Templates;
 public static class DomainEnumTemplate
 {
     /// <summary>
-    /// Returns the content of a Domain enum scoped to an entity folder.
+    /// Returns the content of a Domain enum.
     /// </summary>
     /// <param name="projectName">Project namespace (e.g. <c>MyApp</c>).</param>
-    /// <param name="entityName">Entity folder name (e.g. <c>Order</c>).</param>
     /// <param name="enumName">Enum type name (e.g. <c>OrderStatus</c>).</param>
     /// <returns>Enum file content.</returns>
-    public static string Generate(string projectName, string entityName, string enumName)
+    public static string Generate(string projectName, string enumName)
     {
         return $$"""
-        namespace {{projectName}}.Domain.{{entityName}}.Enums;
+        namespace {{projectName}}.Domain.Enums;
 
         /// <summary>
         /// Represents the {{enumName}} domain enum.
