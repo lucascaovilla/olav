@@ -156,17 +156,17 @@ Generates the entity class inside `src/MyApi.Domain/Entities/` and the enum insi
 olav add repository Order
 ```
 
-Generates two files: the interface in `src/MyApi.Domain/Order/Repositories/IOrderRepository.cs` and the implementation stub in `src/MyApi.Infrastructure/Repositories/Order/OrderRepository.cs`. If you have a database plugin installed, the implementation is placed inside its own persistence layer -- for example with the `postgres` plugin, it lands at `src/MyApi.Infrastructure/Persistence/Postgres/Repositories/Order/OrderRepository.cs` -- and uses the right client instead of a stub.
+Generates two files: the interface in `src/MyApi.Domain/Repositories/IOrderRepository.cs` and the implementation stub in `src/MyApi.Infrastructure/Repositories/OrderRepository.cs`. If you have a database plugin installed, the implementation is placed inside its own persistence layer -- for example with the `postgres` plugin, it lands at `src/MyApi.Infrastructure/Persistence/Postgres/Repositories/OrderRepository.cs` -- and uses the right client instead of a stub.
 
 #### Services
 
 ```bash
 olav add service OrderService
 olav add service OrderService --entity Order
-olav add service EmailService --layer infrastructure
+olav add service EmailService infrastructure
 ```
 
-Generates the interface in `src/MyApi.Application/Services/IOrderService.cs` and the implementation in the same namespace by default. With `--entity`, the generated service gets constructor injection of the matching repository. With `--layer infrastructure`, the interface stays in `Application` and the implementation is placed in `Infrastructure` -- useful for services that wrap external integrations or cross-cutting concerns.
+Generates the interface in `src/MyApi.Application/Services/IOrderService.cs` and the implementation in the same namespace by default. With `--entity`, the generated service gets constructor injection of the matching repository. Passing `infrastructure` as the last argument keeps the interface in `Application` and places the implementation in `Infrastructure` -- useful for services that wrap external integrations or cross-cutting concerns.
 
 #### Infrastructure Plugins
 
@@ -186,6 +186,56 @@ olav add deployment docker
 ```
 
 Installs a deployment plugin. For Azure, it generates a GitHub Actions deployment workflow configured with the parameters you provide. Installed plugins are recorded in `olav.json`.
+
+#### CQRS Commands and Queries
+
+```bash
+olav add command Order PlaceOrder
+olav add query Order GetOrderById
+```
+
+Scaffolds CQRS artifacts for a command or query inside an existing entity's application layer. Artifacts are generated progressively using flags:
+
+```bash
+# Record classes only
+olav add command Order PlaceOrder
+
+# Add handler interface + implementation (auto-registered in ApplicationExtensions.cs and Program.cs)
+olav add command Order PlaceOrder --with-handler
+
+# Add handler + API endpoint (creates or injects into the entity's controller)
+olav add command Order PlaceOrder --with-handler --with-endpoint
+```
+
+Generated structure for `olav add command Order PlaceOrder --with-handler --with-endpoint`:
+
+```
+src/MyApi.Application/Order/Commands/PlaceOrder/
+├── PlaceOrderCommand.cs           # sealed record — add properties here
+├── PlaceOrderCommandResult.cs     # sealed record — returned by the handler
+├── IPlaceOrderCommandHandler.cs   # handler interface
+└── PlaceOrderCommandHandler.cs    # stub implementation — throws NotImplementedException
+
+src/MyApi.Api/Controllers/
+└── OrderController.cs             # created if missing; POST action injected if it exists
+```
+
+Queries work identically (`olav add query`) with GET semantics and a nullable result type (`Task<GetOrderByIdQueryResult?>`).
+
+---
+
+### `olav make`
+
+Generates artifacts that require external tooling.
+
+#### Database Migrations
+
+```bash
+olav make migration postgres InitialCreate
+olav make migration sqlserver AddOrderTable
+```
+
+Requires the corresponding database plugin (`postgres` or `sqlserver`) to be installed. Runs `dotnet ef migrations add` against the infrastructure persistence project for that plugin. The project must have EF Core tools installed (`dotnet-ef`).
 
 ---
 
