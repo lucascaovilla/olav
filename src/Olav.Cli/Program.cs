@@ -54,6 +54,10 @@ internal static class Program
                 ExecuteAdd(args);
                 break;
 
+            case "make":
+                MakeCommand.Execute(args);
+                break;
+
             case "plugin":
                 PluginCommand.Execute(args);
                 break;
@@ -91,8 +95,14 @@ internal static class Program
             case "service":
                 AddServiceCommand.Execute(args);
                 break;
+            case "command":
+                AddCommandCommand.Execute(args);
+                break;
+            case "query":
+                AddQueryCommand.Execute(args);
+                break;
             default:
-                Console.WriteLine("Usage: olav add infrastructure|deployment|entity|enum|repository|service <name>");
+                Console.WriteLine("Usage: olav add infrastructure|deployment|entity|enum|repository|service|command|query <name>");
                 break;
         }
     }
@@ -114,7 +124,10 @@ internal static class Program
           olav add entity <EntityName>
           olav add enum <EntityName> <EnumName>
           olav add repository <EntityName> [<plugin>]
-          olav add service <EntityName> <ServiceName> [application|infrastructure]
+          olav add service <ServiceName> [--entity <EntityName>] [application|infrastructure]
+          olav add command <EntityName> <CommandName> [--with-handler] [--with-endpoint]
+          olav add query <EntityName> <QueryName> [--with-handler] [--with-endpoint]
+          olav make migration <plugin> <MigrationName>
           olav plugin list
           olav plugin remove <id>
           olav source add <alias> <url>

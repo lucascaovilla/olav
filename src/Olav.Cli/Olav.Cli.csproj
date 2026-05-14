@@ -60,6 +60,10 @@
       <LogicalName>postgres.postgres-di.cs.sbn</LogicalName>
       <WithCulture>false</WithCulture>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Plugins\postgres\postgres-dbcontext.cs.sbn">
+      <LogicalName>postgres.postgres-dbcontext.cs.sbn</LogicalName>
+      <WithCulture>false</WithCulture>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Plugins\postgres\postgres-service.yml.sbn">
       <LogicalName>postgres.postgres-service.yml.sbn</LogicalName>
     </EmbeddedResource>
