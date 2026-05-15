@@ -18,11 +18,11 @@ public class AddArtifactCommand_EndToEndTests(GeneratedProjectFixture fixture)
         System.IO.Directory.SetCurrentDirectory(root);
         Olav.Program.Main(["add", "entity", "Order"]);
 
-        string path = Path.Combine(root, "src", $"{name}.Domain", "Entities", "Order.cs");
+        string path = Path.Combine(root, "src", $"{name}.Domain", "Order", "Entities", "Order.cs");
         Assert.True(File.Exists(path));
 
         string content = File.ReadAllText(path);
-        Assert.Contains($"namespace {name}.Domain.Entities;", content);
+        Assert.Contains($"namespace {name}.Domain.Order.Entities;", content);
         Assert.Contains("public class Order", content);
         Assert.Contains("public Guid Id", content);
     }
@@ -36,11 +36,11 @@ public class AddArtifactCommand_EndToEndTests(GeneratedProjectFixture fixture)
         System.IO.Directory.SetCurrentDirectory(root);
         Olav.Program.Main(["add", "enum", "OrderStatus"]);
 
-        string path = Path.Combine(root, "src", $"{name}.Domain", "Enums", "OrderStatus.cs");
+        string path = Path.Combine(root, "src", $"{name}.Domain", "Shared", "Enums", "OrderStatus.cs");
         Assert.True(File.Exists(path));
 
         string content = File.ReadAllText(path);
-        Assert.Contains($"namespace {name}.Domain.Enums;", content);
+        Assert.Contains($"namespace {name}.Domain.Shared.Enums;", content);
         Assert.Contains("public enum OrderStatus", content);
     }
 
@@ -53,14 +53,14 @@ public class AddArtifactCommand_EndToEndTests(GeneratedProjectFixture fixture)
         System.IO.Directory.SetCurrentDirectory(root);
         Olav.Program.Main(["add", "repository", "Product"]);
 
-        string interfacePath = Path.Combine(root, "src", $"{name}.Domain", "Repositories", "IProductRepository.cs");
+        string interfacePath = Path.Combine(root, "src", $"{name}.Domain", "Product", "Repositories", "IProductRepository.cs");
         string implPath = Path.Combine(root, "src", $"{name}.Infrastructure", "Repositories", "ProductRepository.cs");
 
         Assert.True(File.Exists(interfacePath));
         Assert.True(File.Exists(implPath));
 
         string interfaceContent = File.ReadAllText(interfacePath);
-        Assert.Contains($"namespace {name}.Domain.Repositories;", interfaceContent);
+        Assert.Contains($"namespace {name}.Domain.Product.Repositories;", interfaceContent);
         Assert.Contains("public interface IProductRepository", interfaceContent);
         Assert.Contains("GetByIdAsync", interfaceContent);
 
@@ -107,7 +107,7 @@ public class AddArtifactCommand_EndToEndTests(GeneratedProjectFixture fixture)
         Assert.True(File.Exists(implPath));
 
         string content = File.ReadAllText(implPath);
-        Assert.Contains($"{name}.Domain.Repositories", content);
+        Assert.Contains($"{name}.Domain.Order.Repositories", content);
         Assert.Contains("IOrderRepository", content);
         Assert.Contains("public OrderService(IOrderRepository repository)", content);
     }
