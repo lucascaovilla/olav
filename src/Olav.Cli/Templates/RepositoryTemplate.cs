@@ -42,8 +42,8 @@ public static class RepositoryTemplate
         namespace {{implProject}}.Repositories;
 
         using Microsoft.EntityFrameworkCore;
-        using {{projectName}}.Domain.Entities;
-        using {{projectName}}.Domain.Repositories;
+        using {{projectName}}.Domain.{{entityName}}.Entities;
+        using {{projectName}}.Domain.{{entityName}}.Repositories;
 
         /// <summary>
         /// EF Core implementation of <see cref="I{{entityName}}Repository"/>.
@@ -107,8 +107,8 @@ public static class RepositoryTemplate
         namespace {{implProject}}.Repositories;
 
         using StackExchange.Redis;
-        using {{projectName}}.Domain.Entities;
-        using {{projectName}}.Domain.Repositories;
+        using {{projectName}}.Domain.{{entityName}}.Entities;
+        using {{projectName}}.Domain.{{entityName}}.Repositories;
 
         /// <summary>
         /// Redis implementation of <see cref="I{{entityName}}Repository"/>.
@@ -164,8 +164,8 @@ public static class RepositoryTemplate
         return $$"""
         namespace {{projectName}}.Infrastructure.Repositories;
 
-        using {{projectName}}.Domain.Entities;
-        using {{projectName}}.Domain.Repositories;
+        using {{projectName}}.Domain.{{entityName}}.Entities;
+        using {{projectName}}.Domain.{{entityName}}.Repositories;
 
         /// <summary>
         /// Stub implementation of <see cref="I{{entityName}}Repository"/>.

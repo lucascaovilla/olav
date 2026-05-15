@@ -22,7 +22,7 @@ public class RepositoryGenerator
         {
             ["postgres"] = "Persistence.Postgres",
             ["sqlserver"] = "Persistence.SqlServer",
-            ["redis"] = "Persistence.Redis",
+            ["redis"] = "Caching.Redis",
         };
 
     private readonly string entityName;
@@ -63,6 +63,7 @@ public class RepositoryGenerator
             this.root,
             "src",
             $"{this.projectName}.Domain",
+            this.entityName,
             "Repositories",
             $"I{this.entityName}Repository.cs");
 
@@ -71,13 +72,17 @@ public class RepositoryGenerator
             ? $"{this.projectName}.Infrastructure.{suffix}"
             : $"{this.projectName}.Infrastructure";
 
+        string[] suffixParts = suffix?.Split('.') ?? Array.Empty<string>();
+        string repoCategory = suffixParts.Length > 0 ? suffixParts[0] : string.Empty;
+        string pluginShort = suffixParts.Length > 0 ? suffixParts[^1] : string.Empty;
+
         string implementationPath = suffix != null
             ? Path.Combine(
                 this.root,
                 "src",
                 $"{this.projectName}.Infrastructure",
-                "Persistence",
-                suffix.Split('.')[^1],
+                repoCategory,
+                pluginShort,
                 "Repositories",
                 $"{this.entityName}Repository.cs")
             : Path.Combine(
@@ -87,21 +92,40 @@ public class RepositoryGenerator
                 "Repositories",
                 $"{this.entityName}Repository.cs");
 
-        FileSystem.WriteFile(interfacePath, IRepositoryTemplate.Generate(this.projectName, this.entityName));
-        FileSystem.WriteFile(implementationPath, RepositoryTemplate.Generate(this.projectName, this.entityName, this.plugin, implProject));
+        if (!File.Exists(interfacePath))
+        {
+            FileSystem.WriteFile(interfacePath, IRepositoryTemplate.Generate(this.projectName, this.entityName));
+        }
+        else
+        {
+            Console.WriteLine($"[SKIP] {interfacePath} already exists");
+        }
+
+        if (!File.Exists(implementationPath))
+        {
+            FileSystem.WriteFile(implementationPath, RepositoryTemplate.Generate(this.projectName, this.entityName, this.plugin, implProject));
+        }
+        else
+        {
+            Console.WriteLine($"[SKIP] {implementationPath} already exists");
+        }
 
         this.RegisterInDi(suffix, implProject);
     }
 
     private void RegisterInDi(string? suffix, string implProject)
     {
+        string[] diSuffixParts = suffix?.Split('.') ?? Array.Empty<string>();
+        string diCategory = diSuffixParts.Length > 0 ? diSuffixParts[0] : string.Empty;
+        string diPlugin = diSuffixParts.Length > 0 ? diSuffixParts[^1] : string.Empty;
+
         string diPath = suffix != null
             ? Path.Combine(
                 this.root,
                 "src",
                 $"{this.projectName}.Infrastructure",
-                "Persistence",
-                suffix.Split('.')[^1],
+                diCategory,
+                diPlugin,
                 "DependencyInjection.cs")
             : Path.Combine(
                 this.root,
@@ -110,7 +134,7 @@ public class RepositoryGenerator
                 "DependencyInjection.cs");
 
         string registration =
-            $"services.AddScoped<{this.projectName}.Domain.Repositories.I{this.entityName}Repository, {implProject}.Repositories.{this.entityName}Repository>();";
+            $"services.AddScoped<{this.projectName}.Domain.{this.entityName}.Repositories.I{this.entityName}Repository, {implProject}.Repositories.{this.entityName}Repository>();";
 
         if (!File.Exists(diPath))
         {
@@ -123,6 +147,14 @@ public class RepositoryGenerator
         else
         {
             DiRegistrationInjector.Inject(diPath, registration);
+        }
+
+        if (suffix == null)
+        {
+            string programPath = Path.Combine(
+                this.root, "src", $"{this.projectName}.Api", "Program.cs");
+            ProgramDiInjector.Inject(programPath, "builder.Services.AddInfrastructure();");
+            ProgramDiInjector.InjectUsing(programPath, $"{this.projectName}.Infrastructure");
         }
     }
 }

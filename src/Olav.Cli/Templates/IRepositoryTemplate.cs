@@ -18,9 +18,9 @@ public static class IRepositoryTemplate
     public static string Generate(string projectName, string entityName)
     {
         return $$"""
-        namespace {{projectName}}.Domain.Repositories;
+        namespace {{projectName}}.Domain.{{entityName}}.Repositories;
 
-        using {{projectName}}.Domain.Entities;
+        using {{projectName}}.Domain.{{entityName}}.Entities;
 
         /// <summary>
         /// Repository contract for <see cref="{{entityName}}"/>.

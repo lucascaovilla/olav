@@ -14,7 +14,7 @@ public class RepositoryGeneratorTests
 
         new RepositoryGenerator("Order", "MyApp", root, null).Generate();
 
-        Assert.True(File.Exists(Path.Combine(root, "src", "MyApp.Domain", "Repositories", "IOrderRepository.cs")));
+        Assert.True(File.Exists(Path.Combine(root, "src", "MyApp.Domain", "Order", "Repositories", "IOrderRepository.cs")));
         Assert.True(File.Exists(Path.Combine(root, "src", "MyApp.Infrastructure", "Repositories", "OrderRepository.cs")));
     }
 
@@ -25,8 +25,8 @@ public class RepositoryGeneratorTests
 
         new RepositoryGenerator("Order", "MyApp", root, null).Generate();
 
-        string content = File.ReadAllText(Path.Combine(root, "src", "MyApp.Domain", "Repositories", "IOrderRepository.cs"));
-        Assert.Contains("namespace MyApp.Domain.Repositories;", content);
+        string content = File.ReadAllText(Path.Combine(root, "src", "MyApp.Domain", "Order", "Repositories", "IOrderRepository.cs"));
+        Assert.Contains("namespace MyApp.Domain.Order.Repositories;", content);
         Assert.Contains("public interface IOrderRepository", content);
         Assert.Contains("GetByIdAsync", content);
         Assert.Contains("GetAllAsync", content);
@@ -83,7 +83,7 @@ public class RepositoryGeneratorTests
 
         new RepositoryGenerator("Order", "MyApp", root, "redis").Generate();
 
-        string implPath = Path.Combine(root, "src", "MyApp.Infrastructure", "Persistence", "Redis", "Repositories", "OrderRepository.cs");
+        string implPath = Path.Combine(root, "src", "MyApp.Infrastructure", "Caching", "Redis", "Repositories", "OrderRepository.cs");
         Assert.True(File.Exists(implPath));
         string content = File.ReadAllText(implPath);
         Assert.Contains("StackExchange.Redis", content);
@@ -151,7 +151,7 @@ public class RepositoryGeneratorTests
         string diPath = Path.Combine(root, "src", "MyApp.Infrastructure", "Persistence", "Postgres", "DependencyInjection.cs");
         Assert.True(File.Exists(diPath));
         string content = File.ReadAllText(diPath);
-        Assert.Contains("MyApp.Domain.Repositories.IOrderRepository", content);
+        Assert.Contains("MyApp.Domain.Order.Repositories.IOrderRepository", content);
         Assert.Contains("MyApp.Infrastructure.Persistence.Postgres.Repositories.OrderRepository", content);
         Assert.False(File.Exists(Path.Combine(root, "src", "MyApp.Infrastructure", "DependencyInjection.cs")));
     }
@@ -168,5 +168,59 @@ public class RepositoryGeneratorTests
         string content = File.ReadAllText(diPath);
         Assert.Contains("IOrderRepository", content);
         Assert.Contains("IProductRepository", content);
+    }
+
+    [Fact]
+    public void Generate_Domain_Interface_Not_Overwritten_When_Already_Exists()
+    {
+        string root = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+
+        new RepositoryGenerator("Order", "MyApp", root, "postgres").Generate();
+
+        string interfacePath = Path.Combine(root, "src", "MyApp.Domain", "Order", "Repositories", "IOrderRepository.cs");
+        string firstContent = File.ReadAllText(interfacePath);
+
+        new RepositoryGenerator("Order", "MyApp", root, "redis").Generate();
+
+        string secondContent = File.ReadAllText(interfacePath);
+        Assert.Equal(firstContent, secondContent);
+    }
+
+    [Fact]
+    public void Generate_Implementation_Not_Overwritten_When_Already_Exists()
+    {
+        string root = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+
+        new RepositoryGenerator("Order", "MyApp", root, null).Generate();
+
+        string implPath = Path.Combine(root, "src", "MyApp.Infrastructure", "Repositories", "OrderRepository.cs");
+        string firstContent = File.ReadAllText(implPath);
+
+        new RepositoryGenerator("Order", "MyApp", root, null).Generate();
+
+        string secondContent = File.ReadAllText(implPath);
+        Assert.Equal(firstContent, secondContent);
+    }
+
+    [Fact]
+    public void Generate_NoPlugin_Wires_AddInfrastructure_Into_Program()
+    {
+        string root = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+
+        string programPath = Path.Combine(root, "src", "MyApp.Api", "Program.cs");
+        Directory.CreateDirectory(Path.GetDirectoryName(programPath)!);
+        File.WriteAllText(programPath,
+            "namespace MyApp.Api;\n" +
+            "using Microsoft.AspNetCore.Builder;\n" +
+            "public static class Program\n{\n" +
+            "    public static void Main(string[] args)\n    {\n" +
+            "        var builder = WebApplication.CreateBuilder(args);\n" +
+            "        WebApplication app = builder.Build();\n" +
+            "        app.Run();\n    }\n}");
+
+        new RepositoryGenerator("Order", "MyApp", root, null).Generate();
+
+        string programContent = File.ReadAllText(programPath);
+        Assert.Contains("builder.Services.AddInfrastructure();", programContent);
     }
 }

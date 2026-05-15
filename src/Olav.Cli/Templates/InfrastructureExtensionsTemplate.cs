@@ -19,7 +19,7 @@ public static class InfrastructureExtensionsTemplate
     public static string Generate(string projectName, string entityName)
     {
         string registration =
-            $"services.AddScoped<{projectName}.Domain.Repositories.I{entityName}Repository, {projectName}.Infrastructure.Repositories.{entityName}Repository>();";
+            $"services.AddScoped<{projectName}.Domain.{entityName}.Repositories.I{entityName}Repository, {projectName}.Infrastructure.Repositories.{entityName}Repository>();";
 
         return GenerateFile(projectName, registration);
     }
