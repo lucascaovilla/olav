@@ -14,7 +14,7 @@ public class EntityGeneratorTests
 
         new EntityGenerator("Order", "MyApp", root).Generate();
 
-        string expectedPath = Path.Combine(root, "src", "MyApp.Domain", "Entities", "Order.cs");
+        string expectedPath = Path.Combine(root, "src", "MyApp.Domain", "Order", "Entities", "Order.cs");
         Assert.True(File.Exists(expectedPath));
     }
 
@@ -25,8 +25,8 @@ public class EntityGeneratorTests
 
         new EntityGenerator("Order", "MyApp", root).Generate();
 
-        string content = File.ReadAllText(Path.Combine(root, "src", "MyApp.Domain", "Entities", "Order.cs"));
-        Assert.Contains("namespace MyApp.Domain.Entities;", content);
+        string content = File.ReadAllText(Path.Combine(root, "src", "MyApp.Domain", "Order", "Entities", "Order.cs"));
+        Assert.Contains("namespace MyApp.Domain.Order.Entities;", content);
         Assert.Contains("public class Order", content);
         Assert.Contains("public Guid Id", content);
     }
