@@ -24,7 +24,13 @@ A full solution:
 ```
 MyApi/
 ├── src/
-│   ├── MyApi.Domain/           # Entities, value objects — no outward dependencies
+│   ├── MyApi.Domain/                    # Pure domain — no outward dependencies
+│   │   ├── {AggregateRoot}/             # One folder per aggregate
+│   │   │   ├── Entities/                # Entity classes
+│   │   │   ├── Repositories/            # Repository interfaces
+│   │   │   └── Enums/                   # Aggregate-scoped enums (optional)
+│   │   └── Shared/
+│   │       └── Enums/                   # Cross-aggregate enums
 │   ├── MyApi.Application/      # Use cases, handlers, interfaces
 │   ├── MyApi.Infrastructure/   # Repositories, external integrations
 │   └── MyApi.Api/              # Controllers, middleware, entry point
@@ -40,14 +46,14 @@ MyApi/
 
 Adds artifacts to an existing project:
 
-- **`olav add entity`** — domain entity
-- **`olav add enum`** — domain enum
-- **`olav add repository`** — interface in Domain, stub implementation in Infrastructure
-- **`olav add service`** — application or infrastructure service
-- **`olav add command`** — CQRS command record, optional handler, optional API endpoint
-- **`olav add query`** — CQRS query record, optional handler (nullable result), optional API endpoint
-- **`olav add infrastructure`** — install a database/messaging plugin (postgres, redis, sqlserver)
-- **`olav add deployment`** — install a deployment plugin (azure, docker)
+- **`olav add entity <Name>`** — entity class under `Domain/<Name>/Entities/`
+- **`olav add enum <Name> [--entity <AggregateRoot>]`** — enum under `Domain/<AggregateRoot>/Enums/` (scoped) or `Domain/Shared/Enums/` (cross-aggregate)
+- **`olav add repository <Entity> [<plugin>]`** — interface in `Domain/<Entity>/Repositories/`, implementation in Infrastructure (plugin-aware path); DI registration and `Program.cs` wiring are automatic
+- **`olav add service <Entity> <ServiceName> [--layer infrastructure]`** — interface in Application, implementation in Application (default) or Infrastructure; DI registration and `Program.cs` wiring are automatic
+- **`olav add command <Entity> <Name> [--with-handler] [--with-endpoint]`** — CQRS command record, optional handler, optional API endpoint
+- **`olav add query <Entity> <Name> [--with-handler] [--with-endpoint]`** — CQRS query record, optional handler (nullable result), optional API endpoint
+- **`olav add infrastructure <plugin>`** — install a database or caching plugin (`postgres`, `redis`, `sqlserver`); creates an isolated sub-project under `Infrastructure/Persistence/<Plugin>/` or `Infrastructure/Caching/<Plugin>/`
+- **`olav add deployment <plugin>`** — install a deployment plugin (`azure`, `docker`)
 
 ### `olav make`
 
@@ -64,3 +70,14 @@ Every generated project has an `olav.json` at its root. It records the tool vers
 Plugins are the extension mechanism. Official plugins (`postgres`, `sqlserver`, `redis`, `docker`, `azure`) are embedded in the binary. Custom plugins can be hosted anywhere and added via `olav source add`. Each plugin is a manifest (`olav.plugin.json`) with Scriban templates.
 
 When a plugin is installed, Olav injects: NuGet packages, DI registration code, Docker Compose service blocks, and any required workflow files — all in one operation.
+
+## Plugin Categories
+
+Infrastructure plugins are organized into two categories:
+
+| Category | Path | Plugins |
+|----------|------|---------|
+| **Persistence** | `Infrastructure/Persistence/<Plugin>/` | postgres, sqlserver |
+| **Caching** | `Infrastructure/Caching/<Plugin>/` | redis |
+
+Each category produces an isolated class library project. The parent `Infrastructure` project references the category project but excludes its source from compilation to avoid double-compilation.

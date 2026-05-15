@@ -57,11 +57,34 @@ docker compose -f docker/docker-compose.local.yml up -d
 ```bash
 olav add entity Order
 olav add repository Order
+olav add enum OrderStatus --entity Order   # optional: scoped enum
 ```
 
-Generates `Order.cs` in `src/MyApi.Domain/` and `IOrderRepository.cs` with a persistence stub.
+Generates a vertical aggregate slice under `src/MyApi.Domain/Order/`:
 
-## Step 5: Scaffold CQRS
+```
+src/MyApi.Domain/Order/
+├── Entities/
+│   └── Order.cs                  ← MyApi.Domain.Order.Entities
+└── Repositories/
+    └── IOrderRepository.cs       ← MyApi.Domain.Order.Repositories
+```
+
+Enums without `--entity` land in `src/MyApi.Domain/Shared/Enums/`.
+
+## Step 5: Add a Service (optional)
+
+```bash
+# Application-layer service (default)
+olav add service Order OrderService
+
+# Infrastructure-layer service (e.g. an email sender)
+olav add service Email EmailService --layer infrastructure
+```
+
+Application services land in `src/MyApi.Application/Services/`. Infrastructure services split: interface in Application, implementation in `src/MyApi.Infrastructure/Services/`. DI registration and `Program.cs` wiring are automatic.
+
+## Step 6: Scaffold CQRS
 
 ```bash
 # Command with handler and API endpoint
@@ -92,7 +115,7 @@ src/MyApi.Api/Controllers/
 
 The handlers are auto-registered in `ApplicationExtensions.cs` and `Program.cs`. No manual DI wiring needed.
 
-## Step 6: Generate a Migration
+## Step 7: Generate a Migration
 
 Once you have EF Core entities mapped, create a migration:
 
@@ -101,6 +124,16 @@ olav make migration postgres InitialCreate
 ```
 
 This runs `dotnet ef migrations add` against the postgres persistence project.
+
+## Step 8: Explore the API
+
+When running in the Development environment, the generated API exposes an interactive explorer at:
+
+```
+http://localhost:8080/scalar/v1
+```
+
+All controllers and endpoints are listed automatically. No additional setup needed.
 
 ## Next Steps
 
