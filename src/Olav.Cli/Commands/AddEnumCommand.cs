@@ -21,17 +21,28 @@ public static class AddEnumCommand
     {
         if (args.Length < 3)
         {
-            Console.WriteLine("Usage: olav add enum <EnumName>");
+            Console.WriteLine("Usage: olav add enum <EnumName> [--entity <EntityName>]");
             return;
         }
 
         string enumName = args[2];
+        string? entityName = null;
+
+        for (int i = 3; i < args.Length - 1; i++)
+        {
+            if (args[i] == "--entity")
+            {
+                entityName = args[i + 1];
+                break;
+            }
+        }
+
         string root = ProjectRootHelper.FindProjectRoot(Directory.GetCurrentDirectory());
 
         try
         {
             string projectName = ProjectNameHelper.DiscoverProjectName(root);
-            new DomainEnumGenerator(enumName, projectName, root).Generate();
+            new DomainEnumGenerator(enumName, projectName, root, entityName).Generate();
         }
         catch (InvalidOperationException ex)
         {

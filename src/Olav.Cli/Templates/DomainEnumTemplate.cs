@@ -14,11 +14,19 @@ public static class DomainEnumTemplate
     /// </summary>
     /// <param name="projectName">Project namespace (e.g. <c>MyApp</c>).</param>
     /// <param name="enumName">Enum type name (e.g. <c>OrderStatus</c>).</param>
+    /// <param name="entityName">
+    /// Aggregate root this enum belongs to (e.g. <c>Order</c>).
+    /// When <see langword="null"/> the enum is placed under <c>Shared.Enums</c>.
+    /// </param>
     /// <returns>Enum file content.</returns>
-    public static string Generate(string projectName, string enumName)
+    public static string Generate(string projectName, string enumName, string? entityName = null)
     {
+        string ns = entityName != null
+            ? $"{projectName}.Domain.{entityName}.Enums"
+            : $"{projectName}.Domain.Shared.Enums";
+
         return $$"""
-        namespace {{projectName}}.Domain.Enums;
+        namespace {{ns}};
 
         /// <summary>
         /// Represents the {{enumName}} domain enum.
