@@ -35,7 +35,9 @@ public static class DiRegistrationInjector
             return;
         }
 
-        string indented = $"        {registrationLine.Trim()}\n        ";
-        File.WriteAllText(filePath, content.Insert(markerIndex, indented));
+        int lineStart = content.LastIndexOf('\n', markerIndex) + 1;
+        string lineIndent = content[lineStart..markerIndex];
+        string injected = $"{lineIndent}{registrationLine.Trim()}\n";
+        File.WriteAllText(filePath, content.Insert(lineStart, injected));
     }
 }
