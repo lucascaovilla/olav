@@ -133,6 +133,11 @@ public class ServiceGenerator
         {
             DiRegistrationInjector.Inject(diPath, registration);
         }
+
+        string programPath = Path.Combine(
+            this.root, "src", $"{this.projectName}.Api", "Program.cs");
+        ProgramDiInjector.Inject(programPath, "builder.Services.AddApplication();");
+        ProgramDiInjector.InjectUsing(programPath, $"{this.projectName}.Application");
     }
 
     private void RegisterInInfrastructureDi()
@@ -154,5 +159,10 @@ public class ServiceGenerator
         {
             DiRegistrationInjector.Inject(diPath, registration);
         }
+
+        string programPath = Path.Combine(
+            this.root, "src", $"{this.projectName}.Api", "Program.cs");
+        ProgramDiInjector.Inject(programPath, "builder.Services.AddInfrastructure();");
+        ProgramDiInjector.InjectUsing(programPath, $"{this.projectName}.Infrastructure");
     }
 }

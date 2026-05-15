@@ -39,7 +39,7 @@ public class ServiceGeneratorTests
 
         string content = File.ReadAllText(Path.Combine(root, "src", "MyApp.Application", "Services", "OrderService.cs"));
         Assert.Contains("namespace MyApp.Application.Services;", content);
-        Assert.Contains("MyApp.Domain.Repositories", content);
+        Assert.Contains("MyApp.Domain.Order.Repositories", content);
         Assert.Contains("IOrderRepository", content);
         Assert.Contains("public OrderService(IOrderRepository repository)", content);
     }
@@ -135,5 +135,49 @@ public class ServiceGeneratorTests
         string content = File.ReadAllText(diPath);
         Assert.Contains("IEmailService", content);
         Assert.Contains("ISmsService", content);
+    }
+
+    private static string CreateMinimalProgramCs(string root, string projectName)
+    {
+        string programPath = Path.Combine(root, "src", $"{projectName}.Api", "Program.cs");
+        Directory.CreateDirectory(Path.GetDirectoryName(programPath)!);
+        File.WriteAllText(programPath, $$"""
+            namespace {{projectName}}.Api;
+            using Microsoft.AspNetCore.Builder;
+            public static class Program
+            {
+                public static void Main(string[] args)
+                {
+                    var builder = WebApplication.CreateBuilder(args);
+                    WebApplication app = builder.Build();
+                    app.Run();
+                }
+            }
+            """);
+        return programPath;
+    }
+
+    [Fact]
+    public void Generate_Application_Service_Wires_AddApplication_Into_Program()
+    {
+        string root = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        string programPath = CreateMinimalProgramCs(root, "MyApp");
+
+        new ServiceGenerator("Order", "OrderService", "MyApp", root).Generate();
+
+        string content = File.ReadAllText(programPath);
+        Assert.Contains("builder.Services.AddApplication();", content);
+    }
+
+    [Fact]
+    public void Generate_Infrastructure_Service_Wires_AddInfrastructure_Into_Program()
+    {
+        string root = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        string programPath = CreateMinimalProgramCs(root, "MyApp");
+
+        new ServiceGenerator("Email", "EmailService", "MyApp", root, ServiceGenerator.ServiceLayer.Infrastructure).Generate();
+
+        string content = File.ReadAllText(programPath);
+        Assert.Contains("builder.Services.AddInfrastructure();", content);
     }
 }

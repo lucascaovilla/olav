@@ -28,8 +28,8 @@ public static class ServiceTemplate
             return $$"""
             namespace {{projectName}}.Application.Services;
 
-            using {{projectName}}.Domain.Entities;
-            using {{projectName}}.Domain.Repositories;
+            using {{projectName}}.Domain.{{entityName}}.Entities;
+            using {{projectName}}.Domain.{{entityName}}.Repositories;
 
             /// <summary>
             /// Implementation of <see cref="I{{serviceName}}"/>.
